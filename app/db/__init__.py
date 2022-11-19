@@ -32,7 +32,8 @@ def init_db():
         db.drop_all()
         db.create_all()
 
-    '''Order tables by putting tables w/ no Foreign Keys first'''
+    '''This is a list of all our tables. 
+        Order the list by putting tables w/ no Foreign Keys first'''
     tables = ['physician', 'clinic']
     for table in tables:
         populate_table(table)
