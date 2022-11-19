@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row bodoni gold_type yellow_bg">
+
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>DB Query</h3>
+             <span> {{ render_form(form) }} </span>
+         </div>
+    </div>
+
+{% endblock %}
