@@ -4,7 +4,6 @@ ENV FLASK_APP=app
 ENV PORT=5000
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=development
-ENV DATABASE_URL=postgres://kisdjrmq:DsSJegBQVqGvc3f2GFapEcQpqLFPBgRf@peanut.db.elephantsql.com/kisdjrmq
 ENV PATH="/home/myuser/.local/bin:${PATH}"
 RUN apt-get update &&\
     /usr/local/bin/python3 -m pip install --upgrade pip &&\

@@ -15,7 +15,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 database = Blueprint('database', __name__, )
 URL = config.Config.SQLALCHEMY_DATABASE_URI
-engine = create_engine(URL, echo=True)
+engine = create_engine(URL)
 
 def init_db():
     '''try:

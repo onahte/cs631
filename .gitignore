@@ -8,3 +8,4 @@ __pycache__
 .bash_history
 .env
 database
+.bash_profile
