@@ -2,11 +2,11 @@
 {% block content %}
     {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
 
-    <div class="row bodoni gold_type yellow_bg">
+    <div class="row">
 
          <div class="col-5 mx-auto mt-5 mb-5">
              <h3>DB Query</h3>
-             <span> {{ render_form(form) }} </span>
+             <a href="{{ url_for('simple_pages.patient', page='patient')}}"> Patient Query </a>
          </div>
     </div>
 

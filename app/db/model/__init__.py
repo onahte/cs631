@@ -16,7 +16,7 @@ class Physician(db.Model):
         self.ssn = ssn
 
     def __repr__(self):
-        return f'Clinic({self.id}, {self.ssn})'
+        return f'Physician({self.id}, {self.ssn})'
 
 
 class Clinic(db.Model):
@@ -24,9 +24,9 @@ class Clinic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     clinic_name = db.Column(db.String(50), nullable=False)
     street = db.Column(db.String(200), nullable=False)
-    city = db.Column(db.String(50), nullable=False, unique=True)
-    state = db.Column(db.String(25), nullable=False, unique=False)
-    zip = db.Column(db.Integer, nullable=False, unique=False)
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(25), nullable=False)
+    zip = db.Column(db.Integer, nullable=False)
     chief_id = db.Column(db.Integer, ForeignKey(Physician.id), nullable=False, unique=False)
 
     chief = relationship('Physician', foreign_keys='Clinic.chief_id')
@@ -46,3 +46,27 @@ class Clinic(db.Model):
     def __repr__(self):
         return f'Clinic({self.id}, {self.clinic_name}, {self.address()}, {self.chief_id})'
 
+
+class Nurse(db.Model):
+    __tablename__ = 'nurse'
+    id = db.Column(db.Integer, primary_key=True)
+    ssn = db.Column(db.Integer, nullable=False, unique=True)
+
+    def __init__(self, id, ssn):
+        self.id = id
+        self.ssn = ssn
+
+    def __repr__(self):
+        return f'Nurse({self.id}, {self.ssn})'
+
+class Patient(db.Model):
+    __tablename__ = 'patient'
+    id = db.Column(db.Integer, primary_key=True)
+    ssn = db.Column(db.Integer, nullable=False, unique=True)
+
+    def __init__(self, id, ssn):
+        self.id = id
+        self.ssn = ssn
+
+    def __repr__(self):
+        return f'Patient({self.id}, {self.ssn})'
