@@ -63,6 +63,11 @@ class Patient(db.Model):
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
     ssn = db.Column(db.Integer, nullable=False, unique=True)
+    name = db.Column(db.String(200), nullable=False, unique=True)
+    street = db.Column(db.String(200), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(25), nullable=False)
+    zip = db.Column(db.Integer, nullable=False)
 
     def __init__(self, id, ssn):
         self.id = id

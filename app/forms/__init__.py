@@ -29,3 +29,24 @@ class schedule_appt_patient_form(FlaskForm):
     ssn = IntegerField('SSN', validators=[DataRequired()])
     time = DateTimeField('time', validators=[DataRequired()], format='%Y=%m-%d')
     submit = SubmitField("Submit")
+
+
+class staff_role_options_form(FlaskForm):
+    option_selection = ['Physician', 'Nurse', 'Surgeon', 'Support Staff']
+    options = SelectField(choices=option_selection, validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class staff_options_form(FlaskForm):
+    option_selection = ['Add/Remove', 'Schedule', 'View']
+    options = SelectField(choices=option_selection, validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class add_staff(FlaskForm):
+    option_selection = ['Physician', 'Nurse', 'Surgeon', 'Support Staff']
+    options = SelectField(choices=option_selection, validators=[DataRequired()])
+    ssn = IntegerField('SSN', validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class view_physician(FlaskForm):
+    ssn = IntegerField('SSN', validators=[DataRequired()])
+    submit = SubmitField("Submit")

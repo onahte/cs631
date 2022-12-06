@@ -6,7 +6,8 @@ from flask_bootstrap import Bootstrap5
 
 from .simple_pages import simple_pages
 from .db import database, db, migrate, init_db
-
+from .patient import patient
+from .staff import staff
 
 def create_app():
     app = Flask(__name__)
@@ -20,6 +21,8 @@ def create_app():
 
     app.register_blueprint(simple_pages)
     app.register_blueprint(database)
+    app.register_blueprint(patient)
+    app.register_blueprint(staff)
 
     db.init_app(app)
     migrate.init_app(app, db)
