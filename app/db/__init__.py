@@ -3,19 +3,19 @@ import os
 from flask import Blueprint, current_app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, event
-#from sqlalchemy_utils import database_exists, create_database
+# from sqlalchemy_utils import database_exists, create_database
 from flask_migrate import Migrate
-#import psycopg2
+# import psycopg2
 import pandas as pd
 
 from .. import config
-
 
 db = SQLAlchemy()
 migrate = Migrate()
 database = Blueprint('database', __name__, )
 URL = config.Config.SQLALCHEMY_DATABASE_URI
 engine = create_engine(URL)
+
 
 def init_db():
     '''try:

@@ -1,0 +1,11 @@
+allergy_code,name,medical_code
+1,penicillin,201
+2,peanut,205
+3,shellfish,207
+4,soy,210
+5,egg,212
+6,tetracycline,214
+7,dilantin,215
+8,garlic,220
+9,milk,225
+10,fish,230

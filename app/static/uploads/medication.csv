@@ -1,0 +1,11 @@
+medication_code,unit_cost,year_date_usage,inventory_quantity,order_date,name
+701,13,Jul-24,100,1/10/2019,tylenol
+702,15,Aug-24,150,1/10/2019,dayquil
+703,25,Jul-24,100,4/10/2019,anesthesia
+704,25,Jul-24,200,4/10/2019,paralytics
+705,40,Oct-28,50,1/15/2020,benzodiazepines
+706,30,Nov-28,100,12/2/2020,antibiotics
+707,45,Dec-28,120,11/5/2020,analgesics
+708,20,Jan-29,130,12/20/2021,anticoagulants
+709,50,Feb-29,200,12/21/2021,antiemetics
+710,40,Mar-29,100,12/23/2021,stool softeners

@@ -1,2 +1,2 @@
-id,clinic_name,street,city,state,zip,chief_id
-1,Newark Medical Associates,47 Bowman Crossing,Newark,New Jersey,07112,1
+cid,clinic_name,street,city,state,zip,chief_id
+1001,Newark Medical Associates,47 Bowman Crossing,Newark,New Jersey,07112,101
