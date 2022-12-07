@@ -1,7 +1,6 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, aliased
-from sqlalchemy.sql import func
 
 from .. import db
 

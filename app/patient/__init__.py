@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.expression import func
 from ..db import db, model, engine
 from ..forms import *
 
@@ -14,15 +15,15 @@ def patient():
     if form.validate_on_submit():
         option = form.options.data
         if option == 'View Patient Data':
-            return redirect(url_for('simple_pages.view_patient'))
+            return redirect(url_for('patient.view_patient'))
         elif option == 'Add New Patient':
-            return redirect(url_for('simple_pages.add_patient'))
+            return redirect(url_for('patient.add_patient'))
         elif option == 'Check Previous Diagnosis':
-            return redirect(url_for('simple_pages.diag_history_patient'))
+            return redirect(url_for('patient.diag_history_patient'))
         elif option == 'Schedule Appointment':
-            return redirect(url_for('simple_pages.schedule_appointment'))
+            return redirect(url_for('patient.schedule_appointment'))
         elif option == 'View Past Appointments':
-            return redirect(url_for('simple_pages.view_appointment'))
+            return redirect(url_for('patient.view_appointment'))
 
     return render_template('patient.html', form=form)
 
@@ -47,18 +48,16 @@ def add_patient():
     new_patient = None
     if form.validate_on_submit():
         with engine.connect() as connection:
-            last_id = session.query(func.max(Patient.id))
+            last_id = model.Patient.query(func.max(model.Patient.id))
             new_patient = form.data
-            new_patient = Patient(id=last_id + 1, name=new_patient.name, ssn=new_patient.ssn, street=new_patient.street,
-                                  city=new_patient.city, state=new_patient.state, zip=new_patient.zip)
+            new_patient.id = last_id + 1
             session.add(new_patient)
             session.commit()
         flash('Successfully Added New Patient')
         connection.close()
         engine.dispose()
-        return redirect(url_for('simple_pages.patient'))
+        return redirect(url_for('patient.patient'))
     return render_template('add_patient.html', form=form)
-
 
 @patient.route('/patient/diag_history_patient', methods=['POST','GET'])
 def diag_history_patient():
@@ -70,7 +69,7 @@ def diag_history_patient():
             patient_query = session.query(Patient)
             patient_data = patient_query.filter(Patient.ssn==patient.ssn)
             patient_diag = patient_query.filter(MedicalData.ssn==patient.ssn)
-            patient_consult = patient_query.filter(ConsultationReceived.ssn==patient.ssn)
+            patient_consult = patient_query.filter(Consultation.ssn==patient.ssn)
         connection.close()
         engine.dispose()
         return render_template('diag_history_patient.html',
@@ -85,7 +84,8 @@ def schedule_appt_patient():
     appt = None
     if form.validate_on_submit():
         appt = form.data
-        appt = Consultation(ssn=appt.ssn, time=appt.time)
+        ssn = appt.snn
+        date = datetime.date(appt.year, appt.month, appt.day)
         with engine.connect() as connection:
             session.add(appt)
             session.commit()
@@ -97,7 +97,6 @@ def schedule_appt_patient():
 
 
 '''
-
     if selected_form.validate_on_submit():
         v = model.Patient.query(query=selected_form.query.data)
         db.session.add(v)
