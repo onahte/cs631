@@ -99,6 +99,63 @@ class Clinic(db.Model):
         return f'Clinic({self.cid}, {self.clinic_name}, {self.address()}, {self.chief_id})'
 
 
+class Nurse_Schedule(db.Model):
+    __tablename__ = 'nurse_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Nurse_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
+class Staff_Schedule(db.Model):
+    __tablename__ = 'staff_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Staff_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
+class Physician_Schedule(db.Model):
+    __tablename__ = 'physician_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Physician_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
 class Consultation(db.Model):
     __tablename__ = 'consultation'
     consultation_id = db.Column(db.Integer, primary_key=True)
