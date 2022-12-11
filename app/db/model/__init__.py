@@ -99,6 +99,63 @@ class Clinic(db.Model):
         return f'Clinic({self.cid}, {self.clinic_name}, {self.address()}, {self.chief_id})'
 
 
+class Nurse_Schedule(db.Model):
+    __tablename__ = 'nurse_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Nurse_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
+class Staff_Schedule(db.Model):
+    __tablename__ = 'staff_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Staff_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
+class Physician_Schedule(db.Model):
+    __tablename__ = 'physician_schedule'
+    schedule_id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+    def __init__(self, schedule_id, eid, date, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.eid = eid
+        self.date = date
+        self.start_time = start_time
+        self.end_time = end_time
+
+    def __repr__(self):
+        return f'Physician_Schedule({self.schedule_id}, {self.eid}, {self.date}, {self.start_time}, {self.end_time})'
+
+
 class Consultation(db.Model):
     __tablename__ = 'consultation'
     consultation_id = db.Column(db.Integer, primary_key=True)
@@ -187,30 +244,42 @@ class Illness(db.Model):
         return f'Illness({self.illness_code}, {self.name}, {self.medical_code})'
 
 
+class Unit(db.Model):
+    __tablename__ = 'unit'
+    unit_id = db.Column(db.Integer, primary_key=True)
+    unit = db.Column(db.Integer, nullable=False)
+    wing = db.Column(db.String, nullable=False)
+    room = db.Column(db.Integer, nullable=False)
+    bed = db.Column(db.String, nullable=False)
+
+    def __init__(self, unit_id, unit, wing, room, bed):
+        self.unit_id = unit_id
+        self.unit = unit
+        self.wing = wing
+        self.room = room
+        self.bed = bed
+
+    def __repr__(self):
+        return f'Unit({self.unit_id}, {self.unit}, {self.wing}, {self.room}, {self.bed})'
+
+
 class Inpatient(db.Model):
     __tablename__ = 'inpatient'
     pid = db.Column(db.Integer, primary_key=True)
     check_in = db.Column(db.Date, nullable=False)
     check_out = db.Column(db.Date, nullable=False)
-    wing = db.Column(db.String, nullable=False)
-    room = db.Column(db.Integer, nullable=False)
-    bed = db.Column(db.String, nullable=False)
+    unit_id = db.Column(db.Integer, nullable=False)
     eid = db.Column(db.Integer, nullable=False)
-    unit = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, pid, check_in, check_out, wing, room, bed, eid, unit):
+    def __init__(self, pid, check_in, check_out, unit_id, eid):
         self.pid = pid
         self.check_in = check_in
         self.check_out = check_out
-        self.wing = wing
-        self.room = room
-        self.bed = bed
+        self.unit_id = unit_id
         self.eid = eid
-        self.unit = unit
 
     def __repr__(self):
-        return f'Inpatient({self.pid}, {self.check_in}, {self.check_out}, {self.wing}, {self.room}, {self.bed}, ' \
-               f'{self.eid}, {self.unit})'
+        return f'Inpatient({self.pid}, {self.check_in}, {self.check_out}, {self.unit_id}, {self.eid})'
 
 
 class Medicaldata(db.Model):
