@@ -11,6 +11,7 @@ from .physician import physician
 from .surgeon import surgeon
 from .nurse import nurse
 from .staff import staff
+from .inpatient import inpatient
 
 def create_app():
     app = Flask(__name__)
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(surgeon)
     app.register_blueprint(nurse)
     app.register_blueprint(staff)
+    app.register_blueprint(inpatient)
 
     db.init_app(app)
     migrate.init_app(app, db)

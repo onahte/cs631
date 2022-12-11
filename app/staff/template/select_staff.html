@@ -3,11 +3,12 @@
     {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
 
     <div class="row">
-
          <div class="col-5 mx-auto mt-5 mb-5">
-             <h3>Welcome!</h3>
-             <p>Please click on a link in the nav bar to begin.</p>
+             <h3>Staff by Department</h3>
+             <body>
+                Select Department
+                {{ render_form(form)}}
+             </body>
          </div>
     </div>
-
 {% endblock %}

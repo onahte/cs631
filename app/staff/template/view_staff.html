@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row">
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>{{ role }} List</h3>
+             <body>
+                {% for i in range({{ data | length }}) %}
+                    <tr>
+                        <th>{{ data[i].eid}}</th>
+                        <th>{{ data[i].name}}</th>
+                        <th>{{ data[i].ssn}}</th>
+                    </tr>
+                {% endfor %}
+             </body>
+         </div>
+    </div>
+{% endblock %}

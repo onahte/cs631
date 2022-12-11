@@ -1,137 +1,136 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.expression import func
 from ..db import db, model, engine
+from ..db.model import *
 from ..forms import *
 
 
-staff = Blueprint('staff', __name__, template_folder='templates')
+staff = Blueprint('staff', __name__, template_folder='templates', url_prefix='/staff')
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
-@staff.route('/staff', methods=['POST','GET'])
+@staff.route('/', methods=['POST','GET'])
 def staff():
     form = staff_options_form()
     if form.validate_on_submit():
         option = form.options.data
-        if option == 'Add/Remove':
-            return redirect(url_for('staff.addremove'))
+        role = str(form.role.data)
+        if option == 'Add':
+            if role == 'Nurse':
+                return redirect(url_for('nurse.add_nurse'))
+            else:
+                return render_template('add_staff.html', data=role)
+        elif option == 'Remove':
+            if role == 'Physician':
+                return redirect(url_for('physician.remove_physician'))
+            elif role == 'Nurse':
+                return redirect(url_for('nurse.remove_nurse'))
+            elif role == 'Surgeon':
+                return redirect(url_for('surgeon.remove_surgeon'))
+            elif role == 'Support Staff':
+                return redirect(url_for('staff.remove_staff'))
         elif option == 'Schedule':
-            return redirect(url_for('staff.schedule'))
-        elif option == 'View':
-            return redirect(url_for('staff.select'))
-
+            if role=='Surgeon':
+                flash('Surgeons are scheduled by surgery scheduler and not by shift scheduler. Please try again.')
+                return redirect(url_for('staff'))
+            return redirect(url_for(schedule_staff, role=role))
+        elif option == 'View Staff by Type':
+            return redirect(url_for('staff.view_staff', role=role))
     return render_template('staff.html', form=form)
 
-@staff.route('/staff/select', methods=['POST','GET'])
-def select():
-    form = staff_role_options_form()
-    if form.validate_on_submit():
-        option = form.options.data
-        if option == 'Physician':
-            return redirect(url_for('staff.physician'))
-        elif option == 'Nurse':
-            return redirect(url_for('staff.nurse'))
-        elif option == 'Surgeon':
-            return redirect(url_for('staff.surgeon'))
-        elif option == 'Support Staff':
-            return redirect(url_for('staff.support'))
+@staff.route('/view_staff/<role>', methods=['POST', 'GET'])
+def view_staff(role):
+    staff = None
+    if role == 'Physician':
+        with engine.connect() as connection:
+            staff = session.query(model.Physician)
+            session.close()
+            engine.dispose()
+    elif role == 'Nurse':
+        with engine.connect() as connection:
+            staff = session.query(model.Nurse)
+            session.close()
+            engine.dispose()
+    elif role == 'Surgeon':
+        with engine.connect() as connection:
+            staff = session.query(model.Surgeon)
+            session.close()
+            engine.dispose()
+    elif role == 'Support Staff':
+        with engine.connect() as connection:
+            staff = session.query(model.Nurse)
+            session.close()
+            engine.dispose()
+    return render_template('view_staff.html', role=role, data=staff)
 
-    return render_template('staff_view.html', form=form)
-
-@staff.route('/staff/add_staff', methods=['POST','GET'])
-def add_staff():
+@staff.route('/add_staff/<str:role>', methods=['POST','GET'])
+def add_staff(role):
     form = add_staff_form()
-    staff_query = None
     if form.validate_on_submit():
-        option = form.options.data
-        if option == 'Physician':
-            return redirect(url_for('staff.physician'))
         with engine.connect() as connection:
-            last_id = session.query(func.max(Patient.id))
-            new_patient = form.data
-            new_patient = Patient(id=last_id + 1, name=new_patient.name, ssn=new_patient.ssn, street=new_patient.street,
-                                  city=new_patient.city, state=new_patient.state, zip=new_patient.zip)
-            session.add(new_patient)
+            dept = model.Physician
+            if role == 'Surgeon':
+                dept = model.Surgeon
+            elif role == 'Support Staff':
+                dept = model.Support_Staff
+            last_id = session.query(func.max(dept.eid))
+            new_staff = dept(eid=last_id+1,
+                             ssn=form.data.ssn,
+                             name=form.data.name)
+            session.add(new_staff)
             session.commit()
-        flash('Successfully Added New Patient')
+            flash(f'Successfully Added New {role}')
         connection.close()
         engine.dispose()
-        return redirect(url_for('simple_pages.patient'))
-    return render_template('add_patient.html', form=form)
+        return redirect(url_for('staff'))
+    return render_template('add_staff.html', form=form)
 
-
-
-@physician.route('/staff/physician', methods=['POST','GET'])
-def physician():
-    form = query_physician_form()
-    physician = None
+@staff.route('/schedule_staff/<str: role>', methods=['POST','GET'])
+def schedule_physician(role):
+    form = schedule_shift_form()
     if form.validate_on_submit():
-        ssn = form.ssn.data
-        physician_data = model.Physician.query.filter_by(ssn=ssn)
-    return render_template('view_physician.html',
-                           form=form,
-                           data=physician_data)
-
-
-
-
-@staff.route('/staff/diag_history_patient', methods=['POST','GET'])
-def diag_history_patient():
-    form = query_patient_form()
-    patient = None
-    if form.validate_on_submit():
-        patient = form.data
+        dept = model.Physician
+        schedule = model.Physician_Schedule
+        if role == 'Nurse':
+            dept = model.Nurse
+            schedule = model.Nurse_Schedule
+        elif role == 'Support Staff':
+            dept = model.Support_Staff
+            schedule = model.SupportStaff_Schedule
         with engine.connect() as connection:
-            patient_query = session.query(Patient)
-            patient_data = patient_query.filter(Patient.ssn==patient.ssn)
-            patient_diag = patient_query.filter(MedicalData.ssn==patient.ssn)
-            patient_consult = patient_query.filter(ConsultationReceived.ssn==patient.ssn)
-        connection.close()
-        engine.dispose()
-        return render_template('diag_history_patient.html',
-                               data=patient_data,
-                               data2=patient_diag,
-                               data3=patient_consult)
-    return render_template('diag_history_patient.html', form=form)
+            st = form.data.start_time
+            et = form.data.end_time
 
-@staff.route('/staff/schedule_shift', methods=['POST','GET'])
-def schedule_shift():
-    form = schedule_appt_patient_form()
-    appt = None
-    if form.validate_on_submit():
-        appt = form.data
-        appt = Consultation(ssn=appt.ssn, time=appt.time)
-        with engine.connect() as connection:
-            session.add(appt)
+            dept_db = session.query(dept).filter(dept.eid==form.data.eid)
+            if dept_db == None:
+                flash(f'There is no employee by that EID in this department. Please try again.')
+                return redirect(url_for('staff'))
+            shifts = session.query(schedule).filter(schedule.eid==form.data.eid, schedule.date==form.data.date)
+            if shifts:
+                for shift in shifts:
+                    shst = shift.start_time
+                    shet = shift.end_time
+                    if shift.date == form.data.date and \
+                            (st == shst or et == shet or (st < shst and et > shst) or (st < shet and et > shet)):
+                        flash(f'{role} {form.data.eid} is already scheduled for a shift at that time.')
+                        return redirect(url_for('schedule_staff', role=role))
+            last_id = session.query(func.max(schedule.schedule_id))
+            new_shift = schedule(schedule_id=last_id+1,eid=form.data.eid,date=form.data.date,
+                                 start_time=form.data.start_time,end_time=form.data.end_time)
+            session.add(new_shift)
             session.commit()
-        flash('Successfully Scheduled Appointment')
+            flash(f'Physician {form.data.eid} has been scheduled for a shift on {form.data.date} {form.data.time}')
         connection.close()
         engine.dispose()
-        return redirect(url_for('simple_pages.patient'))
-    return render_template('schedule_appt_patient.html', form=form)
-
+        return redirect(url_for('staff'))
+    return render_template('schedule_staff.html', form=form)
 
 '''
-
-    if selected_form.validate_on_submit():
-        v = model.Patient.query(query=selected_form.query.data)
-        db.session.add(v)
-        db.session.commit()
-        flash('Thank you for your query')
-
-The applications should minimally cover:
- In-patient management
-o Check for available room/bed
-o Assign/remove a patent to a room/bed
-o Assign/remove a doctor to a patient
-o Assign/remove a nurse to a patient
-o View scheduled surgery per room and per day
-o View scheduled surgery per surgeon and per day
-o Book a surgery
-o View scheduled surgery per patient
  Medical staff management
-o Add/remove a staff member
-o View staff member per job type 
-o Schedule job shift
+xo Add/remove a staff member
+xo View staff member per job type 
+xo Schedule job shift 
+o Staff salary range $25,000 to $300,000
 '''
