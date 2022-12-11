@@ -4,10 +4,14 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap5
 
-from .simple_pages import simple_pages
 from .db import database, db, migrate, init_db
+from .clinic import clinic
 from .patient import patient
+from .physician import physician
+from .surgeon import surgeon
+from .nurse import nurse
 from .staff import staff
+from .inpatient import inpatient
 
 def create_app():
     app = Flask(__name__)
@@ -22,7 +26,11 @@ def create_app():
     app.register_blueprint(simple_pages)
     app.register_blueprint(database)
     app.register_blueprint(patient)
+    app.register_blueprint(physician)
+    app.register_blueprint(surgeon)
+    app.register_blueprint(nurse)
     app.register_blueprint(staff)
+    app.register_blueprint(inpatient)
 
     db.init_app(app)
     migrate.init_app(app, db)

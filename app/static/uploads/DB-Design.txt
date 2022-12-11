@@ -1,15 +1,16 @@
 Database Design Requirements
-Newark Medical Associates (MMA) is a clinic located in Newark, New Jersey, owned by a group of medical corporations
-and individual physicians.
+Newark Medical Associates (MMA) is a clinic located in Newark, New Jersey, owned by a group
+of medical corporations and individual physicians.
 
 Clinic personnel include physicians, surgeons, nurses, and support staff.
 
 All clinic personnel except the surgeons are on an annual salary.
-Surgeons do not receive a salary but work for Newark Medical Associates on a contract basis. It is possible for a
-physician to have an ownership position in the clinic. Since surgeons perform surgery on patients as needed, it is
-required that a surgery schedule keep track of the operation theatre where a surgeon performs a certain surgery type
+
+Surgeons do not receive a salary but work for Newark Medical Associates on a contract basis.
+
+Since surgeons perform surgery on patients as needed, it is required that a surgery schedule keep track of the operation theatre where a surgeon performs a certain surgery type
 on a particular patient and when that surgery type is performed. Some patients need surgeries and others don’t.
-Surgeons perform surgeries in the clinic; some do a lot, and others just a few. Some surgery types are so rare that
+Surgeons perform surgeries in the clinic. Some surgery types are so rare that
 they may not yet have been performed in the clinic; but there are others that are performed numerous times. In addition,
 there is the need to keep track of nurses who can be assigned to a specific surgeon type since all nurses cannot be
 assigned to assist in all types of surgeries. A nurse cannot be assigned to more than one surgery type. It is the
@@ -65,10 +66,10 @@ LDL, and triglyceride), blood sugar, and the code and name of all the patient’
 
 For both clinic personnel and patients, a Social Security number is collected. For each illness, a code and description
 are recorded. Additional data for each in-patient consists of a required data of admission along with the patient’s
-location (nursing unit, room number, and bed number). Nursing units a renumbered 1 through 7, rooms are located in
-either the Blue or
+location (nursing unit, room number, and bed number).
 
-Green wing , and the bed numbers in a room are labeled A or B. Medications are identified by their unique medication
+Nursing units a renumbered 1 through 7, rooms are located in either the Blue or Green wing , and the bed numbers in a
+room are labeled A or B. Medications are identified by their unique medication
 code and also include name, quantity on hand quantify on order, unit cost, and year to date usage. For medical
 corporations with ownership interest in the clinic the corporation name and headquarters are obtained. Corporation
 name uniquely identifies a medical corporation. The percentage ownership of each clinic is also recorded.
