@@ -2,20 +2,11 @@
 {% block content %}
     {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
     <div class="row">
-
          <div class="col-5 mx-auto mt-5 mb-5">
-             <h3>DB Query</h3>
-             <a href="{{ url_for('simple_pages.index', page='index')}}"> Home </a>
-         </div>
-    </div>
-    <div class="row">
-         <div class="col-5 mx-auto mt-5 mb-5">
-             <h3>Patient Data</h3>
+             <h3>Patient Data Query</h3>
              <body>
                 {{ render_form(form)}}
              </body>
          </div>
     </div>
-
-
 {% endblock %}

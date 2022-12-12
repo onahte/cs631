@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+    <div class="row">
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>View Patient Data</h3>
+             <body>
+                <p>Patient: {{ data.name }} :: {{ data.pid }} </p>
+                <p>SSN: {{ data.ssn }}</p>
+                <p>Gender: {{ data.gender}}</p>
+                <p>Phone: {{ data.number }}</p>
+                <p>Address: {{ data.street }} {{ data.city }} {{ data.state}} {{ data.zip}}</p>
+                <br>
+                <p>Total Cholesterol: {{ data2.total_cholesterol }}</p>
+                <p>HDL: {{ data2.HDL}}</p>
+                <p>Triglyceride: {{ data2.triglyceride}}</p>
+                <p>LDL: {{ data2.LDL }}</p>
+                <p>Sugar Level: {{ data2.sugar_level }}</p>
+                <p>Blood Type: {{ data2.blood_type }}</p>
+                <p>Heart Disease Risk: {{ data2.heart_disease_risk }}</p>
+                <br>
+                <p>Allergy: {{ data3.name }}</p>
+             </body>
+         </div>
+    </div>
+{% endblock %}

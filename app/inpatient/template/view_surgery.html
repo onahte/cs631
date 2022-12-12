@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+    <div class="row">
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>View Surgery by {{ view_by }}</h3>
+             <body>
+             {% for surgery in {{ surgery }} %}
+                <tr>
+                    <th>surgery.surgery_code</th>
+                    <th>Patient: surgery.pid</th>
+                    <th>Surgeon: surgery.eid</th>
+                    <th>Theatre: surgery.theatre</th>
+                    <th>Date: surgery.date</th>
+                    <th>Time: surgery.time</th>
+                </tr>
+             {% endfor %}
+             </body>
+         </div>
+    </div>
+{% endblock %}

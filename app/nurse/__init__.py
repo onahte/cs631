@@ -20,9 +20,19 @@ def add_nurse():
                                     ssn=form.data.ssn,
                                     name=form.data.name,
                                     grade=form.data.grade)
-            session.add(new_nurse)
             unit_add = model.Unit(unit=form.data.unit, eid=last_id+1)
+            new_address = model.Address(eid=last_id,
+                                        street=form.data.street,
+                                        city=form.data.city,
+                                        state=form.data.state,
+                                        zip=form.data.zip)
+            new_gender = model.Gender(eid=last_id, gender=form.data.gender)
+            new_salary = model.Salary(eid=last_id, salary=form.data.salary)
+            session.add(new_nurse)
             session.add(unit_add)
+            session.add(new_address)
+            session.add(new_gender)
+            session.add(new_salary)
             session.commit()
             flash(f'Successfully Added New Nurse')
             connection.close()
@@ -35,12 +45,25 @@ def remove_nurse():
     form = remove_staff_form()
     if form.validate_on_submit():
         with engine.connect() as connection:
-            n = session.query(model.Nurse).filter(model.Nurse.eid==form.data.eid)
-            session.delete(n)
-            n = session.query(model.Unit).filter(model.Unit.eid==form.data.eid)
-            session.delete(n)
-            patients = session.query(model.Inpatient).filter(model.Inpatient.eid==form.data.eid)
+            # Delete from Nurse table
+            nurse_table = session.query(model.Nurse).filter(model.Nurse.eid==form.data.eid)
+            # Delete from Unit table
+            unit_table = session.query(model.Nurse_Unit).filter(model.Nurse_Unit.eid==form.data.eid)
+            # Delete patient association
+            patients = session.query(model.Nurse_Assign_Inpatient).\
+                filter(model.Nurse_Assign_Inpatient.eid==form.data.eid)
             patients.update({model.Inpatient.eid : -1})
+            # Delete from Salary table
+            salary = session.query(model.Salary).filter(model.Salary.eid==form.data.eid)
+            # Delete from Address table
+            address = session.query(model.Address).filter(model.Address.eid==form.data.eid)
+            # Delete from Gender table
+            gender = session.query(model.Gender).filter(model.Gender.eid == form.data.eid)
+            session.delete(nurse_table)
+            session.delete(unit_table)
+            session.delete(salary)
+            session.delete(address)
+            session.delete(gender)
             session.commit()
             connection.close()
             flash('Nurse successfully removed.')

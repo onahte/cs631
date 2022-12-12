@@ -23,7 +23,6 @@ def create_app():
     csrf = CSRFProtect(app)
     bootstrap = Bootstrap5(app)
 
-    app.register_blueprint(simple_pages)
     app.register_blueprint(database)
     app.register_blueprint(patient)
     app.register_blueprint(physician)

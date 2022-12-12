@@ -34,7 +34,13 @@ def init_db():
 
     '''This is a list of all our tables. 
         Order the list by putting tables w/ no Foreign Keys first'''
-    tables = ['physician', 'nurse', 'patient', 'clinic']
+    tables = ['address', 'allergy', 'nurse_assign', 'physician', 'nurse',
+              'patient', 'clinic', 'consultation', 'contract', 'corporate',
+              'gender', 'illness', 'inpatient', 'medical_data', 'medication',
+              'own', 'skill_possessed', 'prescription', 'salary', 'surgery_schedule',
+              'skill', 'staff', 'surgeon', 'surgery', 'work', 'physician_schedule',
+              'nurse_schedule', 'staff_schedule', 'bed', 'inpatient',
+              'nurse_assign_inpatient']
     for table in tables:
         populate_table(table)
         engine.dispose()

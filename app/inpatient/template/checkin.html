@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row">
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>Inpatient Bed Assignment</h3>
+             <body>
+                <p>Available Beds</p>
+                {% for i in {{ beds }} %}
+                    <p>Wing: i[0] | Room: i[1] | Bed: i[2]</p>
+                {% endfor %}
+             </body>
+             <body>
+                <p>Nurses</p>
+                {% for j in {{ nurses[0] }} %}
+                    <p>Wing: j.wing }} | Nurse: j.eid</p>
+                {% endfor %}
+                <br>
+                {% for k in {{ nurses[1] }} %}
+                    <p>Wing: k.wing | Nurse: k.eid</p>
+                {% endfor %}
+                <br>
+             </body>
+             <body>
+                <p>Physicians</p>
+                {% for physician in {{ physcians }} %}
+                    {% for key, value in physician.items() %}
+                        <p>Physician: key | Patient Count: value</p>
+                    {% endfor %}
+                {% endfor %}
+                <br>
+             </body>
+             <body>
+                {{ render_form(form)}}
+             </body>
+         </div>
+    </div>
+{% endblock %}
