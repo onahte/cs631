@@ -33,7 +33,7 @@ class add_patient_form(FlaskForm):
     state = SelectField('State', choices=state_dropdown, validators=[DataRequired()])
     phone = IntegerField('Phone Number', validators=[DataRequired()])
     submit = SubmitField('Submit')
-
+'''
     def validate_ssn(self, ssn):
         if len(ssn) != 9:
             raise ValidationError("SSN must be 9 digits.")
@@ -43,7 +43,7 @@ class add_patient_form(FlaskForm):
                 raise ValidationError("There is already a patient with that SSN.")
             connection.close()
         engine.dispose()
-
+'''
 class schedule_appt_patient_form(FlaskForm):
     pid = IntegerField('Patient ID', validators=[DataRequired()])
     date = DateField('Date', format='%d/%m/%Y', validators=[DataRequired()])
@@ -83,7 +83,7 @@ class add_staff_form(FlaskForm):
     def validate_salary(self, salary):
         if salary < 25000 or salary > 300000:
            raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
-
+'''
     def validate_ssn(self, ssn):
         if len(ssn) != 9:
             raise ValidationError("SSN must be 9 digits.")
@@ -93,7 +93,7 @@ class add_staff_form(FlaskForm):
                 raise ValidationError("There is already a physician with that SSN.")
             connection.close()
         engine.dispose()
-
+'''
 class add_nurse_form(FlaskForm):
     grade_option = ['CNA', 'LPN', 'RN', 'APRN']
     unit_option = [1,2,3,4,5,6,7]
@@ -108,11 +108,11 @@ class add_nurse_form(FlaskForm):
     def validate_salary(self, salary):
         if salary < 25000 or salary > 300000:
            raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
-
+'''
     def validate_ssn(self, ssn):
         if len(ssn) != 9:
             raise ValidationError("SSN must be 9 digits.")
-
+'''
 
 class remove_staff_form(FlaskForm):
     eid = IntegerField('EID', validators=[DataRequired()])

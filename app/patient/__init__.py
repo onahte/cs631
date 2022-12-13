@@ -75,7 +75,7 @@ def add_patient():
             session.add(new_patient)
             session.add(assigned_physician)
             session.commit()
-            flash('Successfully Added New Patient')
+            flash(f'Successfully Added New Patient {new_patient_id}')
             connection.close()
         engine.dispose()
         return redirect(url_for('patient._patient'))
