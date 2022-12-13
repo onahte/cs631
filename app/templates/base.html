@@ -16,21 +16,33 @@
     <body>
 
 
+<div class="container c">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
     <div class="row">
-        {% if request.path == '/'
-            <div class="container">
-                <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <header class="mb-2 type">
+            {% from 'bootstrap5/nav.html' import render_nav_item %}
+            {% from 'bootstrap5/utils.html' import render_messages %}
+            {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <a class="navbar-brand ml-5" href="{{ url_for('clinic.index', page="index")}}">
                     <span class="fs-4">Newark Medical Associates</span>
-                    </a>
-              <ul class="nav nav-pills">
-                <li class="nav-item"><a href="{{ url_for('patient.patient', page='patient')}}"> Patients</a></li>
-                <li class="nav-item"><a href="{{ url_for('staff.staff', page='staff')}}"> Staff</a></li>
-                <li class="nav-item"><<a href="{{ url_for('inpatient.inpatient', page='inpatient')}}"> In-Patient</a></li>
-              </ul>
-            </header>
-          </div>
-        {% endif %}
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                        aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="navbar-nav mr-auto">
+
+                            {{ render_nav_item('patient._patient','Patient' ) }}
+                            {{ render_nav_item('staff._staff', 'Staff') }}
+                            {{ render_nav_item('inpatient._inpatient','Inpatient' ) }}
+
+                    </div>
+                </div>
+           </nav>
+        </header>
+    </div>
     </div>
     <div>
     {% block content %}

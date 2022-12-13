@@ -11,7 +11,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-@staff.route('/remove_surgeon', methods=['POST','GET'])
+@surgeon.route('/remove_surgeon', methods=['POST','GET'])
 def remove_surgeon():
     form = remove_staff_form()
     if form.validate_on_submit():

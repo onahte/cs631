@@ -13,6 +13,7 @@ from .nurse import nurse
 from .staff import staff
 from .inpatient import inpatient
 
+
 def create_app():
     app = Flask(__name__)
     if os.environ.get("FLASK_ENV") == "production":
@@ -24,6 +25,7 @@ def create_app():
     bootstrap = Bootstrap5(app)
 
     app.register_blueprint(database)
+    app.register_blueprint(clinic)
     app.register_blueprint(patient)
     app.register_blueprint(physician)
     app.register_blueprint(surgeon)

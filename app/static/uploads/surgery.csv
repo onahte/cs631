@@ -9,13 +9,13 @@ surgery_code,type,skill_code,special_needs,anatomical_location,rarity
 8,Head & Neck Surgery,67,none,superior,rare
 9,Hernia Surgery,68,none,ventral,rare
 10,Minimally Invasive Surgery,69,none,superior,medium
-1,Bariatric Surgery,51,none,ventral,medium
-2,Breast Surgery,48,none,anterior,common
-3,Colon & Rectal Surgery,45,none,posterior,rare
-4,Endocrine Surgery,36,none,ventral,medium
-5,General Surgery,30,none,proximal,common
-6,Gynecological Surgery,23,none,distal ureter,rare
-7,Hand Surgery,31,none,proximal,rare
-8,Head & Neck Surgery,49,none,superior,rare
-9,Hernia Surgery,50,none,ventral,rare
-10,Minimally Invasive Surgery,47,none,superior,medium
+11,Bariatric Surgery,51,none,ventral,medium
+12,Breast Surgery,48,none,anterior,common
+13,Colon & Rectal Surgery,45,none,posterior,rare
+14,Endocrine Surgery,36,none,ventral,medium
+15,General Surgery,30,none,proximal,common
+16,Gynecological Surgery,23,none,distal ureter,rare
+17,Hand Surgery,31,none,proximal,rare
+18,Head & Neck Surgery,49,none,superior,rare
+19,Hernia Surgery,50,none,ventral,rare
+20,Minimally Invasive Surgery,47,none,superior,medium

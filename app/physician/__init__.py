@@ -5,12 +5,12 @@ from ..db import db, model, engine
 from ..forms import *
 
 
-patient = Blueprint('physician', __name__, template_folder='templates', url_prefix='/physician')
+physician = Blueprint('physician', __name__, template_folder='templates', url_prefix='/physician')
 Session = sessionmaker(bind=engine)
 session = Session()
 
 @physician.route('/', methods=['POST', 'GET'])
-def physician():
+def _physician():
     form = physician_options_form()
     if form.validate_on_submit():
         if form.option.data == 'View Schedule':

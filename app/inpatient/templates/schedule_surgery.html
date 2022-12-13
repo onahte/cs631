@@ -5,14 +5,14 @@
          <div class="col-5 mx-auto mt-5 mb-5">
              <h3>View Surgery by {{ view_by }}</h3>
              <body>
-             {% for surgery in {{ surgery }} %}
+             {% for s in {{ surgery }} %}
                 <tr>
                     <th>surgery.surgery_code</th>
-                    <th>Patient: surgery.pid</th>
-                    <th>Surgeon: surgery.eid</th>
-                    <th>Theatre: surgery.theatre</th>
-                    <th>Date: surgery.date</th>
-                    <th>Time: surgery.time</th>
+                    <th>Patient: s.pid</th>
+                    <th>Surgeon: s.eid</th>
+                    <th>Theatre: s.theatre</th>
+                    <th>Date: s.date</th>
+                    <th>Time: s.time</th>
                 </tr>
              {% endfor %}
              </body>

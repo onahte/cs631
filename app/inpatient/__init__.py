@@ -10,16 +10,16 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 @inpatient.route('/', methods=['POST','GET'])
-def inpatient():
+def _inpatient():
     form = inpatient_option_form()
     if form.validate_on_submit():
-        input = form.data.inpatient
+        input = form.inpatient.data
         if input == 'Check-in':
-            return redirect(url_for('assign_bed'))
+            return redirect(url_for('inpatient.assign_bed'))
         elif input == 'View/Schedule Surgery':
-            return redirect(url_for('view_surgery'))
+            return redirect(url_for('inpatient.schedule_surgery'))
         elif input == 'Reassign Nurse or Physician':
-            return redirect(url_for('reassign'))
+            return redirect(url_for('inpatient.reassign'))
         elif input == 'Check-out':
             return redirect(url_for('check-out'))
     return render_template('inpatient.html', form=form)
@@ -34,24 +34,18 @@ def checkin():
     if form.validate_on_submit():
         with engine.connect() as connection:
             # Assign Bed
-            new_bed_id = session.query(func.max(model.Bed.bed_id)) + 1
-            bed_reservation = model.Bed(pid=inpatient.pid,
-                                        check_in=datetime.now().date(),
-                                        wing=form.wing.data,
-                                        room=form.room.data,
-                                        bed=form.bed.data,
-                                        bed_id=new_bed_id)
-
+            bed_reservation = session.query(model.Bed).filter_by(wing=form.wing.data,
+                                                                room=form.room.data,
+                                                                bed=form.bed.data)
             inpatient_checkin = model.Inpatient(pid=form.pid.data,
                                                 check_in_date=form.check_in_date,
                                                 check_in_time=form.check_in_time,
                                                 check_out_date=None,
                                                 check_out_time=None,
-                                                bed_id=new_bed_id,
-                                                physician_eid=form.physician_eid.data)
+                                                bed_id=bed_reservation,
+                                                eid=form.eid.data)
 
             nurse_assign = model.Nurse_Assign_Inpatient(pid=form.pid.data, eid=form.nurse_eid.data)
-            session.add(bed_reservation)
             session.add(inpatient_checkin)
             session.add(nurse_assign)
             session.commit()
@@ -157,7 +151,7 @@ def schedule_surgery():
             flash(f'Surgery successfully {new_surgery.schedule_id} scheduled.')
             connection.close()
         engine.dispose()
-        return redirect(url_for('inpatient'))
+        return redirect(url_for('inpatient._inpatient'))
     return render_template('schedule_surgery.html', form=form)
 
 @inpatient.route('/reassign', methods=['POST', 'GET'])
@@ -186,7 +180,6 @@ def checkout():
             bed = session.query(model.Bed).filter_by(pid=form.pid.data)
             session.delete(patient)
             session.delete(nurse)
-            session.delete(bed)
             session.commit()
             connection.close()
             flash(f'Patient {form.pid.data} successfully checked out.')

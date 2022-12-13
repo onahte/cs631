@@ -10,7 +10,8 @@ class Config(object):
     USER = "kisdjrmq"
     PW = "DsSJegBQVqGvc3f2GFapEcQpqLFPBgRf"
     PORT = "5432"
-    POSTGRES_URI = "peanut.db.elephantsql.com"
+    POSTGRES_URI = "newarkmedicalassociates.caglylxbhcpl.us-east-1.rds.amazonaws.com"
+    #POSTGRES_URI = "peanut.db.elephantsql.com"
     SQLALCHEMY_DATABASE_URI = "postgresql://" + USER + ":" + PW + "@" + POSTGRES_URI + "/" + USER
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CSV_DIR = os.path.join(BASE_DIR, 'static/uploads')

@@ -1,6 +1,6 @@
-cid,corporate_id,eid,percent_own
-1001,N/A,N/A,30
-N/A,20001,N/A,40
-N/A,N/A,101,10
-N/A,N/A,102,10
-NA/,N/A,103,10
+own_id,cid,corporate_id,eid,percent_own
+1,1001,,,30
+2,,20001,,40
+3,,,101,10
+4,,,102,10
+5,,,103,10

@@ -147,7 +147,7 @@ class inpatient_checkin_form(FlaskForm):
     bed = RadioField('Bed', choices=['A', 'B'], validators=[DataRequired()])
     check_in_date = DateField('Check In Date', format='%d/%m/%Y')
     check_in_time = TimeField('Check In Time', format='%H:%M')
-    physician_eid = IntegerField('Physician', validators=[DataRequired()])
+    eid = IntegerField('Physician', validators=[DataRequired()])
     nurse_eid = IntegerField('Nurse')
     submit = SubmitField('Submit')
 

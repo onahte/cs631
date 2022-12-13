@@ -5,14 +5,13 @@ from ..db import db, model, engine
 from ..db.model import *
 from ..forms import *
 
-
 staff = Blueprint('staff', __name__, template_folder='templates', url_prefix='/staff')
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
-@staff.route('/', methods=['POST','GET'])
-def staff():
+@staff.route('/', methods=['POST', 'GET'])
+def _staff():
     form = staff_options_form()
     if form.validate_on_submit():
         option = form.options.data
@@ -32,7 +31,7 @@ def staff():
             elif role == 'Support Staff':
                 return redirect(url_for('remove_staff'))
         elif option == 'Schedule':
-            if role=='Surgeon':
+            if role == 'Surgeon':
                 flash('Surgeons are scheduled by surgery scheduler and not by shift scheduler. Please try again.')
                 return redirect(url_for('staff'))
             return redirect(url_for(schedule_staff, role=role))
@@ -40,7 +39,8 @@ def staff():
             return redirect(url_for('view_staff', role=role))
     return render_template('staff.html', form=form)
 
-@staff.route('/view_staff/<str: role>', methods=['POST', 'GET'])
+
+@staff.route('/view_staff/<role>', methods=['POST', 'GET'])
 def view_staff(role):
     staff = None
     if role == 'Physician':
@@ -65,7 +65,8 @@ def view_staff(role):
             engine.dispose()
     return render_template('view_staff.html', role=role, data=staff)
 
-@staff.route('/add_staff/<str:role>', methods=['POST','GET'])
+
+@staff.route('/add_staff/<role>', methods=['POST', 'GET'])
 def add_staff(role):
     form = add_staff_form()
     if form.validate_on_submit():
@@ -95,7 +96,8 @@ def add_staff(role):
         return redirect(url_for('staff'))
     return render_template('add_staff.html', form=form)
 
-@staff.route('/schedule_staff/<str: role>', methods=['POST','GET'])
+
+@staff.route('/schedule_staff/<role>', methods=['POST', 'GET'])
 def schedule_physician(role):
     form = schedule_shift_form()
     if form.validate_on_submit():
@@ -111,11 +113,11 @@ def schedule_physician(role):
             st = form.start_time.data
             et = form.end_time.data
 
-            dept_db = session.query(dept).filter(dept.eid==form.eid.data)
+            dept_db = session.query(dept).filter(dept.eid == form.eid.data)
             if dept_db == None:
                 flash(f'There is no employee by that EID in this department. Please try again.')
                 return redirect(url_for('schedule_staff'))
-            shifts = session.query(schedule).filter(schedule.eid==form.eid.data, schedule.date==form.date.data)
+            shifts = session.query(schedule).filter(schedule.eid == form.eid.data, schedule.date == form.date.data)
             if shifts:
                 for shift in shifts:
                     shst = shift.start_time
@@ -125,15 +127,16 @@ def schedule_physician(role):
                         flash(f'{role} {form.eid.data} is already scheduled for a shift at that time.')
                         return redirect(url_for('schedule_staff', role=role))
             last_id = session.query(func.max(schedule.schedule_id))
-            new_shift = schedule(schedule_id=last_id+1,eid=form.eid.data,date=form.date.data,
-                                 start_time=form.start_time.data,end_time=form.end_time.data)
+            new_shift = schedule(schedule_id=last_id + 1, eid=form.eid.data, date=form.date.data,
+                                 start_time=form.start_time.data, end_time=form.end_time.data)
             session.add(new_shift)
             session.commit()
             flash(f'Physician {form.eid.data} has been scheduled for a shift on {form.date.data} {form.time.data}')
         connection.close()
         engine.dispose()
-        return redirect(url_for('staff'))
+        return redirect(url_for('_staff'))
     return render_template('schedule_staff.html', form=form)
+
 
 '''
  Medical staff management

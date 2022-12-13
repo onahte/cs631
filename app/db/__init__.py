@@ -16,7 +16,7 @@ database = Blueprint('database', __name__, )
 URL = config.Config.SQLALCHEMY_DATABASE_URI
 engine = create_engine(URL)
 
-
+'''
 def init_db():
     '''try:
         connection = psycopg2.connect(URL)
@@ -34,22 +34,20 @@ def init_db():
 
     '''This is a list of all our tables. 
         Order the list by putting tables w/ no Foreign Keys first'''
-    tables = ['address', 'allergy', 'nurse_assign', 'physician', 'nurse',
+    tables = ['address', 'allergy', 'physician', 'bed', 'nurse',
               'patient', 'clinic', 'consultation', 'contract', 'corporate',
               'gender', 'illness', 'inpatient', 'medical_data', 'medication',
-              'own', 'skill_possessed', 'prescription', 'salary', 'surgery_schedule',
-              'skill', 'staff', 'surgeon', 'surgery', 'work', 'physician_schedule',
-              'nurse_schedule', 'staff_schedule', 'bed', 'inpatient',
-              'nurse_assign_inpatient']
+              'nurse_assign_surgery', 'nurse_assign_inpatient', 'nurse_schedule',
+              'own', 'skill_possessed', 'prescription', 'salary', 'skill',
+              'surgery_schedule', 'staff', 'surgeon', 'surgery',
+              'work', 'physician_schedule', 'staff_schedule', 'nurse_unit']
     for table in tables:
         populate_table(table)
-        engine.dispose()
-    '''
+    ''' 
     Foreign Key error occurs when implementing:
     for filename in os.listdir(current_app.config['CSV_DIR']):
         basename, extension = os.path.splitext(filename)
     '''
-
     connection.close()
     engine.dispose()
 
@@ -59,3 +57,4 @@ def populate_table(table):
     filepath = os.path.join(current_app.config['CSV_DIR'], filename)
     data = pd.read_csv(filepath)
     data.to_sql(table, engine, if_exists='append', index=False)
+'''

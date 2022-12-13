@@ -9,38 +9,37 @@ patient = Blueprint('patient', __name__, template_folder='templates', url_prefix
 Session = sessionmaker(bind=engine)
 session = Session()
 
-@patient.route('/', methods=['POST','GET'])
-def patient():
+@patient.route('/patient', methods=['POST','GET'])
+def _patient():
     form = patient_options_form()
     if form.validate_on_submit():
         option = form.options.data
         if option == 'View Patient Data':
-            return redirect(url_for('view_patient'))
+            return redirect(url_for('patient.view_patient'))
         elif option == 'Add New Patient':
-            return redirect(url_for('add_patient'))
+            return redirect(url_for('patient.add_patient'))
         elif option == 'Check Previous Diagnosis':
-            return redirect(url_for('diag_history_patient'))
+            return redirect(url_for('patient.diag_history_patient'))
         elif option == 'Schedule Appointment':
-            return redirect(url_for('schedule_appointment'))
+            return redirect(url_for('patient.schedule_appointment'))
         elif option == 'View Past Appointments':
             return redirect(url_for('view_appointment'))
-
-    return render_template('/patient.html', form=form)
+    return render_template('patient.html', form=form)
 
 @patient.route('/view_patient', methods=['POST','GET'])
 def view_patient():
     form = query_patient_form()
     if form.validate_on_submit():
         pid = form.pid.data
-        patient_data = model.Patient.query.filter_by(pid=pid)
-        patient_diag = model.Medical_Data.query(query=pid)
-        patient_allergy = model.Allergy.query(query=pid)
-        return redirect('view_patient_data.html', data=patient_data, data2=patient_diag, data3=patient_allergy)
+        with engine.connect() as connection:
+            patient_data = session.query(model.Patient).filter_by(pid=pid)
+            patient_diag = session.query(model.Medical_Data).filter_by(pid=pid)
+        return redirect(url_for('patient.view_patient_data', data=patient_data, data2=patient_diag))
     return render_template('view_patient.html', form=form)
 
-@patient.route('/view_patient_data/<data>/<data2>/<data3>', methods=['POST','GET'])
-def view_patient_data(data, data2, data3):
-    return render_template('view_patient_data.html', data=data, data2=data2, data3=data3)
+@patient.route('/patient/view_patient_data/<data>/<data2>', methods=['POST','GET'])
+def view_patient_data(data, data2):
+    return render_template('view_patient_data.html', data=data, data2=data2)
 
 @patient.route('/add_patient', methods=['POST','GET'])
 def add_patient():
@@ -79,7 +78,7 @@ def add_patient():
             flash('Successfully Added New Patient')
             connection.close()
         engine.dispose()
-        return redirect(url_for('patient'))
+        return redirect(url_for('patient._patient'))
     return render_template('add_patient.html', form=form)
 
 @patient.route('/diag_history', methods=['POST','GET'])
@@ -124,7 +123,7 @@ def schedule_appt():
             flash('Successfully Scheduled Appointment')
         connection.close()
         engine.dispose()
-        return redirect(url_for('patient'))
+        return redirect(url_for('patient._patient'))
     return render_template('schedule_appt.html', form=form)
 
 
