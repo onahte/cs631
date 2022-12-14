@@ -104,11 +104,12 @@ def schedule_appt():
 @patient.route('/view_appointment', methods=['POST','GET'])
 def view_appointment():
     form = query_patient_form()
+    patient = db.session.query(model.Patient).all()
     if form.validate_on_submit():
         pid = form.pid.data
         patient_data = db.session.query(model.Consultation).filter_by(pid=form.pid.data)
         return render_template('view_appointment_data.html', pid=pid, data=patient_data)
-    return render_template('view_appointment.html', form=form)
+    return render_template('view_appointment.html', form=form, patient=patient)
 
 '''
  Patient management

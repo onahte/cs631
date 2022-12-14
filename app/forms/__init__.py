@@ -27,13 +27,13 @@ class query_patient_form(FlaskForm):
 
 class add_patient_form(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    ssn = IntegerField('SSN', validators=[DataRequired()])
+    ssn = StringField('SSN', validators=[DataRequired()])
     gender = SelectField('Gender', choices=['M', 'F'], validators=[DataRequired()])
     dob = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
     city =  StringField('City', validators=[DataRequired()])
     state = SelectField('State', choices=state_dropdown, validators=[DataRequired()])
-    zip = IntegerField('Zip', validators=[DataRequired()])
+    zip = StringField('Zip', validators=[DataRequired()])
     phone = IntegerField('Phone Number', validators=[DataRequired()])
     eid = IntegerField('Physician EID', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -66,11 +66,12 @@ class staff_type_form(FlaskForm):
     submit = SubmitField('Submit')
 
 class add_staff_form(FlaskForm):
-    ssn = IntegerField('SSN', validators=[DataRequired()])
+    ssn = StringField('SSN', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
     city =  StringField('City', validators=[DataRequired()])
     state = SelectField('State', choices=state_dropdown, validators=[DataRequired()])
+    zip = StringField('Zip Code', validators=[DataRequired()])
     gender = SelectField('Gender', choices=['M', 'F'], validators=[DataRequired()])
     salary = IntegerField('Salary', validators=[DataRequired(), NumberRange(25000, 300000)])
     submit = SubmitField("Submit")
@@ -78,7 +79,7 @@ class add_staff_form(FlaskForm):
 class add_nurse_form(FlaskForm):
     grade_option = ['CNA', 'LPN', 'RN', 'APRN']
     unit_option = [1,2,3,4,5,6,7]
-    ssn = IntegerField('SSN', validators=[DataRequired()])
+    ssn = StringField('SSN', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     grade = SelectField(choices=grade_option, validators=[DataRequired()])
     unit = SelectField(choices=unit_option, validators=[DataRequired()])
@@ -101,11 +102,11 @@ class schedule_shift_form(FlaskForm):
     submit = SubmitField('Submit')
 
     def validate_date(self, date):
-        if date < datetime.date.now():
+        if date.data < datetime.date.now():
             raise ValidationError(f"You cannot schedule a shift in passed date.")
 
     def validate_time(self, start_time, end_time):
-        if start_time > end_time:
+        if start_time.data > end_time.data:
             raise ValidationError("Shift end time must be after start time.")
 
 class inpatient_option_form(FlaskForm):

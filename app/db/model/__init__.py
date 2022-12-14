@@ -11,7 +11,7 @@ class Address(db.Model):
     street = db.Column(db.String(200), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(25), nullable=False)
-    zip = db.Column(db.Integer, nullable=False)
+    zip = db.Column(db.VARCHAR, nullable=False)
 
     def __init__(self, eid, street, city, state, zip):
         self.eid = eid
@@ -44,7 +44,7 @@ class Allergy(db.Model):
 class Physician(db.Model):
     __tablename__ = 'physician'
     eid = db.Column(db.Integer, primary_key=True)
-    ssn = db.Column(db.BIGINT, nullable=False, unique=True)
+    ssn = db.Column(db.VARCHAR, nullable=False, unique=True)
     name = db.Column(db.String(50), nullable=False)
 
     def __init__(self, eid, ssn, name):
@@ -75,7 +75,7 @@ class Clinic(db.Model):
     street = db.Column(db.String(200), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(25), nullable=False)
-    zip = db.Column(db.BIGINT, nullable=False)
+    zip = db.Column(db.VARCHAR, nullable=False)
     chief_id = db.Column(db.Integer, ForeignKey(Physician.eid), nullable=False, unique=False)
 
     chief = relationship('Physician', foreign_keys='Clinic.chief_id')
@@ -251,7 +251,7 @@ class Medication(db.Model):
 class Nurse(db.Model):
     __tablename__ = 'nurse'
     eid = db.Column(db.Integer, primary_key=True)
-    ssn = db.Column(db.BIGINT, nullable=False, unique=True)
+    ssn = db.Column(db.VARCHAR, nullable=False, unique=True)
     grade = db.Column(db.String(10), nullable=False)
     name = db.Column(db.String(50), nullable=False)
 
@@ -331,13 +331,13 @@ class Patient(db.Model):
     __tablename__ = 'patient'
     pid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
-    ssn = db.Column(db.BIGINT, nullable=False, unique=True)
+    ssn = db.Column(db.VARCHAR, nullable=False, unique=True)
     dob = db.Column(db.Date, nullable=False)
     gender = db.Column(db.CHAR(1), nullable=False)
     street = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(25), nullable=False)
     state = db.Column(db.String(20), nullable=False)
-    zip = db.Column(db.BIGINT, nullable=False)
+    zip = db.Column(db.VARCHAR, nullable=False)
     number = db.Column(db.BIGINT, nullable=False)
     eid = db.Column(db.Integer, nullable=False)
 
@@ -458,7 +458,7 @@ class Skill(db.Model):
 class Staff(db.Model):
     __tablename__ = 'staff'
     eid = db.Column(db.Integer, primary_key=True)
-    ssn = db.Column(db.BIGINT, nullable=False, unique=True)
+    ssn = db.Column(db.VARCHAR, nullable=False, unique=True)
     name = db.Column(db.String(50), nullable=False)
 
     def __init__(self, eid, ssn, name):
@@ -472,7 +472,7 @@ class Staff(db.Model):
 class Surgeon(db.Model):
     __tablename__ = 'surgeon'
     eid = db.Column(db.Integer, primary_key=True)
-    ssn = db.Column(db.BIGINT, nullable=False, unique=True)
+    ssn = db.Column(db.VARCHAR, nullable=False, unique=True)
     name = db.Column(db.String(50), nullable=False)
 
     def __init__(self, eid, ssn, name):

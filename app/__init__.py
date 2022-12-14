@@ -35,7 +35,7 @@ def create_app():
 
     db.init_app(app)
     #migrate.init_app(app, db)
-    #with app.app_context():
-    #    init_db()
+    with app.app_context():
+        init_db()
 
     return app
