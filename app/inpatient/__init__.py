@@ -31,6 +31,7 @@ def checkin():
     nurses = [blue_wing, green_wing]
     form = inpatient_checkin_form()
     physicians = show_physician()
+    patients_checkedin = db.session.query(model.Inpatient).all()
     if form.validate_on_submit():
         new_bed = model.Bed(pid=form.pid.data,
                             wing=form.wing.data,
@@ -52,7 +53,8 @@ def checkin():
         flash(f'Patient was assigned to physician: {form.eid.data} wing: {form.wing.data} '
               f'room: {form.room.data} bed: {form.bed.data}.')
         return redirect(url_for('inpatient._inpatient'))
-    return render_template('checkin.html', beds=avail_beds, nurses=nurses, physicians=physicians, form=form)
+    return render_template('checkin.html', beds=avail_beds, nurses=nurses, physicians=physicians,
+                           form=form, patients_checkedin=patients_checkedin)
 
 def show_beds():
     beds_green_first = 120
@@ -105,7 +107,7 @@ def view_by_theatre():
     view_by = f'Theatre {form.theatre.data}'
     if form.validate_on_submit():
         surgery = None
-        if form.theatre.data == 1001:
+        if form.theatre.data == '1001':
            surgery = model.SurgerySchedule.query.filter_by(theatre=1001).all()
         else:
            surgery = model.SurgerySchedule.query.filter_by(theatre=1002).all()
@@ -153,16 +155,17 @@ def schedule_surgery():
 @inpatient.route('/reassign', methods=['POST', 'GET'])
 def reassign():
     form = reassign_staff_form()
+    role = form.staff.data
+    nurses = db.session.query(model.Nurse).all()
+    physicians = db.session.query(model.Physician).all()
     if form.validate_on_submit():
-        if form.staff.data == 'Nurse':
-            assignment = db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
-            model.Nurse_Assign_Inpatient.update({assignment.eid : form.eid.data})
-        patient = session.query(model.Inpatient).filter_by(pid=form.pid.data)
-        model.Inpatient.update({patient.eid : form.eid.data})
+        if role == 'Nurse':
+            db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data).update({model.Nurse_Assign_Inpatient.eid : form.eid.data})
+        db.session.query(model.Inpatient).filter_by(pid=form.pid.data).update({model.Inpatient.eid : form.eid.data})
         db.session.commit()
         flash(f'{form.staff.data} reassigned.')
         return redirect(url_for('inpatient._inpatient'))
-    return render_template('reassign.html', form=form)
+    return render_template('reassign.html', form=form, role=role, nurses=nurses, physicians=physicians)
 
 @inpatient.route('/checkout', methods=['POST', 'GET'])
 def checkout():

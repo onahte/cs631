@@ -135,7 +135,7 @@ class view_surgery_form(FlaskForm):
     submit = SubmitField('Submit')
 
 class view_by_theatre_form(FlaskForm):
-    theatre = SelectField('Surgery Theatre', choices=[1001, 1002], validators=[DataRequired()])
+    theatre = SelectField('Surgery Theatre', choices=['1001', '1002'], validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class view_by_surgeon_form(FlaskForm):
