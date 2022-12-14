@@ -155,17 +155,17 @@ def schedule_surgery():
 @inpatient.route('/reassign', methods=['POST', 'GET'])
 def reassign():
     form = reassign_staff_form()
-    role = form.staff.data
     nurses = db.session.query(model.Nurse).all()
     physicians = db.session.query(model.Physician).all()
     if form.validate_on_submit():
+        role = form.staff.data
         if role == 'Nurse':
             db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data).update({model.Nurse_Assign_Inpatient.eid : form.eid.data})
         db.session.query(model.Inpatient).filter_by(pid=form.pid.data).update({model.Inpatient.eid : form.eid.data})
         db.session.commit()
         flash(f'{form.staff.data} reassigned.')
         return redirect(url_for('inpatient._inpatient'))
-    return render_template('reassign.html', form=form, role=role, nurses=nurses, physicians=physicians)
+    return render_template('reassign.html', form=form, nurses=nurses, physicians=physicians)
 
 @inpatient.route('/checkout', methods=['POST', 'GET'])
 def checkout():
