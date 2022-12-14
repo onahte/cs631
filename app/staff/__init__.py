@@ -5,10 +5,8 @@ from ..db import db, model, engine
 from ..db.model import *
 from ..forms import *
 
-staff = Blueprint('staff', __name__, template_folder='templates', url_prefix='/staff')
-Session = sessionmaker(bind=engine)
-session = Session()
 
+staff = Blueprint('staff', __name__, template_folder='templates', url_prefix='/staff')
 
 @staff.route('/', methods=['POST', 'GET'])
 def _staff():
@@ -72,18 +70,18 @@ def add_staff(role):
                                     zip=form.zip.data)
         new_gender = model.Gender(eid=last_id, gender=form.gender.data)
         new_salary = model.Salary(eid=last_id, salary=form.salary.data)
-        session.add(new_staff)
-        session.add(new_address)
-        session.add(new_gender)
-        session.add(new_salary)
-        session.commit()
+        db.session.add(new_staff)
+        db.session.add(new_address)
+        db.session.add(new_gender)
+        db.session.add(new_salary)
+        db.session.commit()
         flash(f'Successfully Added {form.name.data} as New {role}')
         return redirect(url_for('staff._staff'))
     return render_template('add_staff.html', form=form, role=role)
 
 
 @staff.route('/schedule_staff/<role>', methods=['POST', 'GET'])
-def schedule_physician(role):
+def schedule_staff(role):
     form = schedule_shift_form()
     if form.validate_on_submit():
         dept = model.Physician
@@ -92,16 +90,16 @@ def schedule_physician(role):
             dept = model.Nurse
             schedule = model.Nurse_Schedule
         elif role == 'Support Staff':
-            dept = model.Support_Staff
+            dept = model.Staff
             schedule = model.SupportStaff_Schedule
 
         st = form.start_time.data
         et = form.end_time.data
-        dept_db = session.query(dept).filter(dept.eid == form.eid.data)
+        dept_db = db.session.query(dept).filter_by(eid=form.eid.data)
         if dept_db == None:
             flash(f'There is no employee by that EID in this department. Please try again.')
             return redirect(url_for('staff.schedule_staff'))
-        shifts = session.query(schedule).filter(schedule.eid == form.eid.data, schedule.date == form.date.data)
+        shifts = db.session.query(schedule).filter_by(eid=form.eid.data, date=form.date.data).all()
         if shifts:
             for shift in shifts:
                 shst = shift.start_time
@@ -109,15 +107,16 @@ def schedule_physician(role):
                 if shift.date == form.date.data and \
                         (st == shst or et == shet or (st < shst and et > shst) or (st < shet and et > shet)):
                     flash(f'{role} {form.eid.data} is already scheduled for a shift at that time.')
-                    return redirect(url_for('schedule_staff', role=role))
-        last_id = session.query(func.max(schedule.schedule_id))
-        new_shift = schedule(schedule_id=last_id + 1, eid=form.eid.data, date=form.date.data,
+                    return redirect(url_for('staff.schedule_staff', role=role))
+        new_id = db.session.query(func.max(schedule.schedule_id)).first()[0] + 1
+        new_shift = schedule(schedule_id=new_id, eid=form.eid.data, date=form.date.data,
                              start_time=form.start_time.data, end_time=form.end_time.data)
-        session.add(new_shift)
-        session.commit()
-        flash(f'Physician {form.eid.data} has been scheduled for a shift on {form.date.data} {form.time.data}')
+        db.session.add(new_shift)
+        db.session.commit()
+        flash(f'{role} {form.eid.data} has been scheduled for a shift on {form.date.data}.'
+              f'\nStart: {form.start_time.data}  \nEnd: {form.end_time.data}')
         return redirect(url_for('staff._staff'))
-    return render_template('schedule_staff.html', form=form)
+    return render_template('schedule_staff.html', form=form, role=role)
 
 
 '''

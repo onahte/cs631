@@ -7,29 +7,15 @@ from ..forms import *
 
 
 surgeon = Blueprint('surgeon', __name__, template_folder='templates', url_prefix='/surgeon')
-Session = sessionmaker(bind=engine)
-session = Session()
-
 
 @surgeon.route('/remove_surgeon', methods=['POST','GET'])
 def remove_surgeon():
     form = remove_staff_form()
     if form.validate_on_submit():
-        with engine.connect() as connection:
-            # Remove from Salary
-            salary = session.query(model.Salary).filter_by(pid=form.pid.data)
-            # Remove from Address
-            address = session.query(model.Address).filter_by(pid=form.pid.data)
-            # Remove from Gender
-            gender = session.query(model.Gender).filter_by(pid=form.pid.data)
-            # Remove from Surgeon
-            surgeon = session.query(model.Surgeon).filter_by(pid=form.pid.data)
-            session.delete(salary)
-            session.delete(address)
-            session.delete(gender)
-            session.delete(surgeon)
-            session.commit()
-            connection.close()
-        engine.dispose()
-        return redirect(url_for('staff.staff'))
+        db.session.query(model.Salary).filter_by(pid=form.pid.data).delete()
+        db.session.query(model.Address).filter_by(pid=form.pid.data).delete()
+        db.session.query(model.Gender).filter_by(pid=form.pid.data).delete()
+        db.session.query(model.Surgeon).filter_by(pid=form.pid.data).delete()
+        db.session.commit()
+        return redirect(url_for('staff._staff'))
     return render_template('remove_surgeon.html', form=form)

@@ -6,8 +6,6 @@ from ..forms import *
 
 
 physician = Blueprint('physician', __name__, template_folder='templates', url_prefix='/physician')
-Session = sessionmaker(bind=engine)
-session = Session()
 
 @physician.route('/', methods=['POST', 'GET'])
 def _physician():
@@ -23,54 +21,30 @@ def _physician():
 def physician_schedule():
     form = physician_view_schedule_form()
     if form.validate_on_submit():
-        schedule = session.query(model.Consultation).filter(model.Consultation.eid==form.eid.data,
-                                                            model.Consultation.date==form.date.data)
-
+        schedule = session.query(model.Consultation).filter_by(eid=form.eid.data, date=form.date.data)
         return redirect(url_for('view_schedule'), data=schedule)
     return render_template('physician_schedule.html', form=form)
 
 @physician.route('/remove_physician', methods=['POST','GET'])
 def remove_physician():
     form = remove_staff_form()
+    physicians = db.session.query(model.Physician).all()
     if form.validate_on_submit():
         eid = form.eid.data
-        with engine.connect() as connection:
-            # Remove from Physician table
-            physician = session.query(model.Physician).filter(model.Physician.eid==eid)
-            # Remove from Prescription table
-            script = session.query(model.Precription).filter(model.Prescription.eid==eid)
-            # Remove patient assignment
-            patient_assign = session.query(model.Inpatient).filter(model.Inpatient.physician_eid == eid)
-            # Remove from schedule
-            schedule = session.query(model.Physician_Schedule).filter(model.Physician_Schedule.eid == eid)
-            # Reassign patients to chief of staff
-            clinic = session.query(model.Clinic)
-            chief = clinic.chief_id
-            consultation = session.query(model.Consultation).filter(model.Consultation.eid==eid)
-            consultation.update({model.Consultation.eid : chief})
-            # Delete from Salary table
-            salary = session.query(model.Salary).filter(model.Salary.eid == eid)
-            # Delete from Address table
-            address = session.query(model.Address).filter(model.Address.eid == eid)
-            # Delete from Gender table
-            gender = session.query(model.Gender).filter(model.Gender.eid == eid)
-            flash(f'Physician {eid} successfully removed from system.')
-            flash(f"Physician {eid}'s patients have been transferred to {chief}.")
-            session.delete(physician)
-            if script:
-                session.delete(script)
-            if patient_assign:
-                session.delete(patient_assign)
-            if schedule:
-                session.delete(schedule)
-            session.delete(salary)
-            session.delete(address)
-            session.delete(gender)
-            session.commit()
-            connection.close()
-        engine.dispose()
-        return redirect(url_for('physician.physician'))
-    return render_template('physician.html', form=form)
+        db.session.query(model.Physician).filter_by(eid=eid).delete()
+        db.session.query(model.Prescription).filter_by(eid=eid).delete()
+        db.session.query(model.Inpatient).filter_by(eid=eid).delete()
+        db.session.query(model.Physician_Schedule).filter_by(eid=eid).delete()
+        chief = db.session.query(model.Clinic.chief_id).first()[0]
+        db.session.query(model.Consultation).filter_by(eid=eid).update({model.Consultation.eid: chief})
+        db.session.query(model.Salary).filter_by(eid=eid).delete()
+        db.session.query(model.Address).filter_by(eid=eid).delete()
+        db.session.query(model.Gender).filter_by(eid=eid).delete()
+        flash(f'Physician {eid} successfully removed from system.')
+        flash(f"Physician {eid}'s patients have been transferred to {chief}.")
+        db.session.commit()
+        return redirect(url_for('staff._staff'))
+    return render_template('remove_physician.html', form=form, physicians=physicians)
 
 
 '''

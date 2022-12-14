@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, ValidationError, NumberRange
 from wtforms.fields import SelectField, IntegerField, StringField, SubmitField, DateField, TimeField
@@ -94,15 +94,14 @@ class remove_staff_form(FlaskForm):
 
 
 class schedule_shift_form(FlaskForm):
-    role = SelectField(choices=role_selection, validators=[DataRequired()])
     eid = IntegerField('EID', validators=[DataRequired()])
-    DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
-    start_time = TimeField('Start Time', formate='%H:%M', validators=[DataRequired()])
-    end_time = TimeField('End Time', formate='%H:%M', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    start_time = TimeField('Start Time', validators=[DataRequired()])
+    end_time = TimeField('End Time', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
     def validate_date(self, date):
-        if date.data < datetime.date.now():
+        if date.data < datetime.now().date():
             raise ValidationError(f"You cannot schedule a shift in passed date.")
 
     def validate_time(self, start_time, end_time):

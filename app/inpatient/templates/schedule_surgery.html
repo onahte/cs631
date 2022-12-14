@@ -5,6 +5,11 @@
          <div class="col-5 mx-auto mt-5 mb-5">
              <h3>Schedule Surgery</h3>
              <body>
+             {{ render_form(form)}}
+             </body>
+             <br>
+             <br>
+             <body>
              <p>Surgery Codes</p>
              <table class="table table-striped table-hover">
                  <thead>
@@ -30,9 +35,6 @@
                  {% endfor %}
                  </tbody>
              </table>
-             </body>
-             <body>
-             {{ render_form(form)}}
              </body>
          </div>
     </div>

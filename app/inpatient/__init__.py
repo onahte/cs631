@@ -6,8 +6,6 @@ from ..forms import *
 
 
 inpatient = Blueprint('inpatient', __name__, template_folder='templates', url_prefix='/inpatient')
-Session = sessionmaker(bind=engine)
-session = Session()
 
 @inpatient.route('/', methods=['POST','GET'])
 def _inpatient():
@@ -48,9 +46,9 @@ def checkin():
             nurse_assign = model.Nurse_Assign_Inpatient(pid=form.pid.data,
                                                         eid=form.nurse_eid.data)
             session.add(nurse_assign)
-        session.add(new_bed)
-        session.add(inpatient_checkin)
-        session.commit()
+        db.session.add(new_bed)
+        db.session.add(inpatient_checkin)
+        db.session.commit()
         flash(f'Patient was assigned to physician: {form.eid.data} wing: {form.wing.data} '
               f'room: {form.room.data} bed: {form.bed.data}.')
         return redirect(url_for('inpatient._inpatient'))
@@ -87,7 +85,6 @@ def show_nurses():
 def show_physician():
     physicians = model.Inpatient.query.with_entities(model.Inpatient.eid,
                                                     func.count(model.Inpatient.eid)).group_by(model.Inpatient.eid).all()
-    #physicians = db.session.query(func.count(model.Inpatient.eid)).group_by(model.Inpatient.eid).all()
     return physicians
 
 @inpatient.route('/view_options', methods=['POST', 'GET'])
@@ -148,7 +145,7 @@ def schedule_surgery():
                                             theatre=form.theatre.data,
                                             date=form.date.data,
                                             time=form.time.data)
-        session.add(new_surgery)
+        db.session.add(new_surgery)
         flash(f'Surgery {new_surgery.schedule_id} successfully scheduled.')
         return redirect(url_for('inpatient._inpatient'))
     return render_template('schedule_surgery.html', form=form, surgery_code=surgery_code)
@@ -158,11 +155,11 @@ def reassign():
     form = reassign_staff_form()
     if form.validate_on_submit():
         if form.staff.data == 'Nurse':
-            assignment = session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
+            assignment = db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
             model.Nurse_Assign_Inpatient.update({assignment.eid : form.eid.data})
         patient = session.query(model.Inpatient).filter_by(pid=form.pid.data)
         model.Inpatient.update({patient.eid : form.eid.data})
-        session.commit()
+        db.session.commit()
         flash(f'{form.staff.data} reassigned.')
         return redirect(url_for('inpatient._inpatient'))
     return render_template('reassign.html', form=form)
@@ -171,12 +168,13 @@ def reassign():
 def checkout():
     form = query_patient_form()
     if form.validate_on_submit():
-        patient = session.query(model.Inpatient).filter_by(pid=form.pid.data)
-        nurse = session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
-        bed = session.query(model.Bed).filter_by(pid=form.pid.data)
-        session.delete(patient)
-        session.delete(nurse)
-        session.commit()
+        patient = db.session.query(model.Inpatient).filter_by(pid=form.pid.data)
+        nurse = db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
+        bed = db.session.query(model.Bed).filter_by(pid=form.pid.data)
+        db.session.delete(patient)
+        db.session.delete(nurse)
+        db.session.delete(bed)
+        db.session.commit()
         flash(f'Patient {form.pid.data} successfully checked out.')
         return redirect(url_for('inpatient._inpatient'))
     return render_template('checkout.html', form=form)

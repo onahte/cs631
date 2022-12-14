@@ -7,8 +7,6 @@ from ..forms import *
 
 
 patient = Blueprint('patient', __name__, template_folder='templates', url_prefix='/patient')
-Session = sessionmaker(bind=engine)
-session = Session()
 
 @patient.route('/patient', methods=['POST','GET'])
 def _patient():
@@ -45,6 +43,7 @@ def view_patient_data(data, data2):
 @patient.route('/add_patient', methods=['POST','GET'])
 def add_patient():
     form = add_patient_form()
+    physicians = db.session.query(model.Physician).all()
     if form.validate_on_submit():
         # Add patient to Patient table
         new_patient_id = db.session.query(func.max(model.Patient.pid)).first()[0] + 1
@@ -59,11 +58,11 @@ def add_patient():
                                     zip=form.zip.data,
                                     number=form.phone.data,
                                     eid=form.eid.data)
-        session.add(new_patient)
-        session.commit()
+        db.session.add(new_patient)
+        db.session.commit()
         flash(f'Successfully Added New Patient {new_patient_id}')
         return redirect(url_for('patient._patient'))
-    return render_template('add_patient.html', form=form)
+    return render_template('add_patient.html', form=form, physicians=physicians)
 
 @patient.route('/diag_history', methods=['POST','GET'])
 def diag_history():

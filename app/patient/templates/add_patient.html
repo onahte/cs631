@@ -7,6 +7,26 @@
              <body>
                 {{ render_form(form) }}
              </body>
+             <br>
+             <br>
+             <body>
+             <table class="table table-striped table-hover">
+                 <thead>
+                 <tr>
+                     <th>Physicians</th>
+                     <th>ID</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 {% for p in physicians %}
+                 <tr>
+                     <td>{{p.name}}</td>
+                     <td>{{p.eid}}</td>
+                 </tr>
+                 {% endfor %}
+                 </tbody>
+             </table>
+             </body>
          </div>
     </div>
 {% endblock %}
