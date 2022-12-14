@@ -15,12 +15,12 @@ def _staff():
     form = staff_options_form()
     if form.validate_on_submit():
         option = form.options.data
-        role = str(form.role.data)
+        role = form.role.data
         if option == 'Add':
             if role == 'Nurse':
                 return redirect(url_for('nurse.add_nurse'))
             else:
-                return redirect(url_for('add_staff'), data=role)
+                return redirect(url_for('staff.add_staff'), role=role)
         elif option == 'Remove':
             if role == 'Physician':
                 return redirect(url_for('physician.remove_physician'))
@@ -29,7 +29,7 @@ def _staff():
             elif role == 'Surgeon':
                 return redirect(url_for('surgeon.remove_surgeon'))
             elif role == 'Support Staff':
-                return redirect(url_for('remove_staff'))
+                return redirect(url_for('staff.remove_staff'))
         elif option == 'Schedule':
             if role == 'Surgeon':
                 flash('Surgeons are scheduled by surgery scheduler and not by shift scheduler. Please try again.')
@@ -58,30 +58,27 @@ def view_staff(role):
 def add_staff(role):
     form = add_staff_form()
     if form.validate_on_submit():
-        with engine.connect() as connection:
-            dept = model.Physician
-            if role == 'Support Staff':
-                dept = model.Support_Staff
-            last_id = session.query(func.max(dept.eid)) + 1
-            new_staff = dept(eid=last_id,
-                             ssn=form.ssn.data,
-                             name=form.name.data)
-            new_address = model.Address(eid=last_id,
-                                        street=form.street.data,
-                                        city=form.city.data,
-                                        state=form.state.data,
-                                        zip=form.zip.data)
-            new_gender = model.Gender(eid=last_id, gender=form.gender.data)
-            new_salary = model.Salary(eid=last_id, salary=form.salary.data)
-            session.add(new_staff)
-            session.add(new_address)
-            session.add(new_gender)
-            session.add(new_salary)
-            session.commit()
-            flash(f'Successfully Added New {role}')
-        connection.close()
-        engine.dispose()
-        return redirect(url_for('staff'))
+        dept = model.Physician
+        if role == 'Support Staff':
+            dept = model.Support_Staff
+        last_id = db.session.query(func.max(dept.eid)).first()[0] + 1
+        new_staff = dept(eid=last_id,
+                         ssn=form.ssn.data,
+                         name=form.name.data)
+        new_address = model.Address(eid=last_id,
+                                    street=form.street.data,
+                                    city=form.city.data,
+                                    state=form.state.data,
+                                    zip=form.zip.data)
+        new_gender = model.Gender(eid=last_id, gender=form.gender.data)
+        new_salary = model.Salary(eid=last_id, salary=form.salary.data)
+        session.add(new_staff)
+        session.add(new_address)
+        session.add(new_gender)
+        session.add(new_salary)
+        session.commit()
+        flash(f'Successfully Added {form.name.data} as New {role}')
+        return redirect(url_for('staff._staff'))
     return render_template('add_staff.html', form=form)
 
 
@@ -97,32 +94,29 @@ def schedule_physician(role):
         elif role == 'Support Staff':
             dept = model.Support_Staff
             schedule = model.SupportStaff_Schedule
-        with engine.connect() as connection:
-            st = form.start_time.data
-            et = form.end_time.data
 
-            dept_db = session.query(dept).filter(dept.eid == form.eid.data)
-            if dept_db == None:
-                flash(f'There is no employee by that EID in this department. Please try again.')
-                return redirect(url_for('schedule_staff'))
-            shifts = session.query(schedule).filter(schedule.eid == form.eid.data, schedule.date == form.date.data)
-            if shifts:
-                for shift in shifts:
-                    shst = shift.start_time
-                    shet = shift.end_time
-                    if shift.date == form.date.data and \
-                            (st == shst or et == shet or (st < shst and et > shst) or (st < shet and et > shet)):
-                        flash(f'{role} {form.eid.data} is already scheduled for a shift at that time.')
-                        return redirect(url_for('schedule_staff', role=role))
-            last_id = session.query(func.max(schedule.schedule_id))
-            new_shift = schedule(schedule_id=last_id + 1, eid=form.eid.data, date=form.date.data,
-                                 start_time=form.start_time.data, end_time=form.end_time.data)
-            session.add(new_shift)
-            session.commit()
-            flash(f'Physician {form.eid.data} has been scheduled for a shift on {form.date.data} {form.time.data}')
-        connection.close()
-        engine.dispose()
-        return redirect(url_for('_staff'))
+        st = form.start_time.data
+        et = form.end_time.data
+        dept_db = session.query(dept).filter(dept.eid == form.eid.data)
+        if dept_db == None:
+            flash(f'There is no employee by that EID in this department. Please try again.')
+            return redirect(url_for('staff.schedule_staff'))
+        shifts = session.query(schedule).filter(schedule.eid == form.eid.data, schedule.date == form.date.data)
+        if shifts:
+            for shift in shifts:
+                shst = shift.start_time
+                shet = shift.end_time
+                if shift.date == form.date.data and \
+                        (st == shst or et == shet or (st < shst and et > shst) or (st < shet and et > shet)):
+                    flash(f'{role} {form.eid.data} is already scheduled for a shift at that time.')
+                    return redirect(url_for('schedule_staff', role=role))
+        last_id = session.query(func.max(schedule.schedule_id))
+        new_shift = schedule(schedule_id=last_id + 1, eid=form.eid.data, date=form.date.data,
+                             start_time=form.start_time.data, end_time=form.end_time.data)
+        session.add(new_shift)
+        session.commit()
+        flash(f'Physician {form.eid.data} has been scheduled for a shift on {form.date.data} {form.time.data}')
+        return redirect(url_for('staff._staff'))
     return render_template('schedule_staff.html', form=form)
 
 

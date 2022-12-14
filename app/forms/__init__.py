@@ -1,7 +1,7 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired, ValidationError, Length, NumberRange
-from wtforms.fields import SelectField, IntegerField, StringField, SubmitField, RadioField, DateField, TimeField
+from wtforms.validators import DataRequired, ValidationError
+from wtforms.fields import SelectField, IntegerField, StringField, SubmitField, DateField, TimeField
 from sqlalchemy.orm import sessionmaker
 from ..db import db, model, engine
 
@@ -37,17 +37,7 @@ class add_patient_form(FlaskForm):
     phone = IntegerField('Phone Number', validators=[DataRequired()])
     eid = IntegerField('Physician EID', validators=[DataRequired()])
     submit = SubmitField('Submit')
-'''
-    def validate_ssn(self, ssn):
-        if len(ssn) != 9:
-            raise ValidationError("SSN must be 9 digits.")
-        with engine.connect() as connection:
-            ssn_query = session.query(model.Patient).filter(model.Patient.ssn==ssn)
-            if ssn:
-                raise ValidationError("There is already a patient with that SSN.")
-            connection.close()
-        engine.dispose()
-'''
+
 class schedule_appt_patient_form(FlaskForm):
     pid = IntegerField('Patient ID', validators=[DataRequired()])
     eid = IntegerField('Physician ID', validators=[DataRequired()])
@@ -62,7 +52,7 @@ class physician_options_form(FlaskForm):
 
 class physician_view_schedule_form(FlaskForm):
     eid = IntegerField('Physician EID', validators=[DataRequired()])
-    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
+    date = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class staff_options_form(FlaskForm):
@@ -88,17 +78,7 @@ class add_staff_form(FlaskForm):
     def validate_salary(self, salary):
         if salary < 25000 or salary > 300000:
            raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
-'''
-    def validate_ssn(self, ssn):
-        if len(ssn) != 9:
-            raise ValidationError("SSN must be 9 digits.")
-        with engine.connect() as connection:
-            ssn_query = session.query(model.Physician).filter(model.Physician.ssn==ssn)
-            if ssn:
-                raise ValidationError("There is already a physician with that SSN.")
-            connection.close()
-        engine.dispose()
-'''
+
 class add_nurse_form(FlaskForm):
     grade_option = ['CNA', 'LPN', 'RN', 'APRN']
     unit_option = [1,2,3,4,5,6,7]
@@ -113,11 +93,6 @@ class add_nurse_form(FlaskForm):
     def validate_salary(self, salary):
         if salary < 25000 or salary > 300000:
            raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
-'''
-    def validate_ssn(self, ssn):
-        if len(ssn) != 9:
-            raise ValidationError("SSN must be 9 digits.")
-'''
 
 class remove_staff_form(FlaskForm):
     eid = IntegerField('EID', validators=[DataRequired()])
@@ -127,7 +102,7 @@ class remove_staff_form(FlaskForm):
 class schedule_shift_form(FlaskForm):
     role = SelectField(choices=role_selection, validators=[DataRequired()])
     eid = IntegerField('EID', validators=[DataRequired()])
-    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
+    DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     start_time = TimeField('Start Time', formate='%H:%M', validators=[DataRequired()])
     end_time = TimeField('End Time', formate='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -141,8 +116,8 @@ class schedule_shift_form(FlaskForm):
             raise ValidationError("Shift end time must be after start time.")
 
 class inpatient_option_form(FlaskForm):
-    inpatient_options = ['Check-in','View/Schedule Surgery', 'Reassign Nurse/Physician', 'Check-out']
-    inpatient = SelectField('InPatient Options', choices=inpatient_options, validators=[DataRequired()])
+    inpatient_options = ['Check-in','View Surgery', 'Schedule Surgery', 'Reassign Nurse/Physician', 'Check-out']
+    inpatient = SelectField('Inpatient Options', choices=inpatient_options, validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class inpatient_checkin_form(FlaskForm):
@@ -150,8 +125,8 @@ class inpatient_checkin_form(FlaskForm):
     wing = SelectField('Wing', choices=['Blue', 'Green'], validators=[DataRequired()])
     room = StringField('Room', validators=[DataRequired()])
     bed = SelectField('Bed', choices=['A', 'B'], validators=[DataRequired()])
-    check_in_date = DateField('Check In Date', format='%Y-%m-%d')
-    check_in_time = TimeField('Check In Time', format='%H:%M')
+    check_in_date = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
+    check_in_time = TimeField('Check In Time')
     nurse_eid = IntegerField('Nurse')
     eid = IntegerField('Physician', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -163,10 +138,19 @@ class assign_staff_form(FlaskForm):
 
 class view_surgery_form(FlaskForm):
     view_surgery_by = SelectField('View Surgery By', choices=[('Theatre','Theatre'), ('Surgeon','Surgeon'),
-                                                              ('Patient','Patient')],
-                                  render_kw={'onchange': "myFunction()"})
-    options = IntegerField('ID')
-    date = DateField('Date (Leave blank if query is by patient)', format='%H:%M')
+                                                              ('Patient','Patient')], validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class view_by_theatre_form(FlaskForm):
+    theatre = SelectField('Surgery Theatre', choices=[1001, 1002], validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class view_by_surgeon_form(FlaskForm):
+    surgeon = IntegerField('Surgeons', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class view_by_patient_form(FlaskForm):
+    patient = IntegerField('Patient', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class schedule_surgery_form(FlaskForm):
@@ -174,7 +158,7 @@ class schedule_surgery_form(FlaskForm):
     eid = IntegerField('Surgeon ID', validators=[DataRequired()])
     surgery_code = IntegerField('Surgery Code', validators=[DataRequired()])
     theatre = IntegerField('Theatre', validators=[DataRequired()])
-    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
     time = TimeField('Time', format='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Submit')
 

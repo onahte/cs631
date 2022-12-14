@@ -191,7 +191,7 @@ class Inpatient(db.Model):
     check_out_time = db.Column(db.Time)
     eid = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, pid, check_in_date, check_in_time, check_out_date, check_out_time, physician_eid):
+    def __init__(self, pid, check_in_date, check_in_time, check_out_date, check_out_time, eid):
         self.pid = pid
         self.check_in_date = check_in_date
         self.check_in_time = check_in_time

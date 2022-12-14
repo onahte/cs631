@@ -3,18 +3,36 @@
     {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
     <div class="row">
          <div class="col-5 mx-auto mt-5 mb-5">
-             <h3>View Surgery by {{ view_by }}</h3>
+             <h3>Schedule Surgery</h3>
              <body>
-             {% for s in {{ surgery }} %}
-                <tr>
-                    <th>surgery.surgery_code</th>
-                    <th>Patient: s.pid</th>
-                    <th>Surgeon: s.eid</th>
-                    <th>Theatre: s.theatre</th>
-                    <th>Date: s.date</th>
-                    <th>Time: s.time</th>
-                </tr>
-             {% endfor %}
+             <p>Surgery Codes</p>
+             <table class="table table-striped table-hover">
+                 <thead>
+                 <tr>
+                     <th>Surgery Code</th>
+                     <th>Surgery Type</th>
+                     <th>Skill Code</th>
+                     <th>Special Needs</th>
+                     <th>Anatomical Location</th>
+                     <th>Rarity</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 {% for s in surgery_code %}
+                 <tr>
+                     <td>{{ s.surgery_code }}</td>
+                     <td>{{ s. type }}</td>
+                     <td>{{ s.skill_code }}</td>
+                     <td>{{ s.special_needs }}</td>
+                     <td>{{ s.anatomical_location }}</td>
+                     <td>{{ s.rarity }}</td>
+                 </tr>
+                 {% endfor %}
+                 </tbody>
+             </table>
+             </body>
+             <body>
+             {{ render_form(form)}}
              </body>
          </div>
     </div>
