@@ -15,19 +15,19 @@ def add_nurse():
     form = add_nurse_form()
     if form.validate_on_submit():
         with engine.connect() as connection:
-            last_id = session.query(func.max(model.Nurse.eid))
-            new_nurse = model.Nurse(eid=last_id + 1,
-                                    ssn=form.data.ssn,
-                                    name=form.data.name,
-                                    grade=form.data.grade)
-            unit_add = model.Unit(unit=form.data.unit, eid=last_id + 1)
-            new_address = model.Address(eid=last_id,
-                                        street=form.data.street,
-                                        city=form.data.city,
-                                        state=form.data.state,
-                                        zip=form.data.zip)
-            new_gender = model.Gender(eid=last_id, gender=form.data.gender)
-            new_salary = model.Salary(eid=last_id, salary=form.data.salary)
+            new_id = session.query(func.max(model.Nurse.eid)).first()[0] + 1
+            new_nurse = model.Nurse(eid=new_id,
+                                    ssn=form.ssn.data,
+                                    name=form.name.data,
+                                    grade=form.grade.data)
+            unit_add = model.Nurse_Unit(unit=form.unit.data, eid=new_id)
+            new_address = model.Address(eid=new_id,
+                                        street=form.street.data,
+                                        city=form.city.data,
+                                        state=form.state.data,
+                                        zip=form.zip.data)
+            new_gender = model.Gender(eid=new_id, gender=form.gender.data)
+            new_salary = model.Salary(eid=new_id, salary=form.salary.data)
             session.add(new_nurse)
             session.add(unit_add)
             session.add(new_address)

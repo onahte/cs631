@@ -20,7 +20,7 @@ def _staff():
             if role == 'Nurse':
                 return redirect(url_for('nurse.add_nurse'))
             else:
-                return redirect(url_for('staff.add_staff'), role=role)
+                return redirect(url_for('staff.add_staff', role=role))
         elif option == 'Remove':
             if role == 'Physician':
                 return redirect(url_for('physician.remove_physician'))
@@ -79,7 +79,7 @@ def add_staff(role):
         session.commit()
         flash(f'Successfully Added {form.name.data} as New {role}')
         return redirect(url_for('staff._staff'))
-    return render_template('add_staff.html', form=form)
+    return render_template('add_staff.html', form=form, role=role)
 
 
 @staff.route('/schedule_staff/<role>', methods=['POST', 'GET'])

@@ -30,12 +30,13 @@ def _patient():
 @patient.route('/view_patient', methods=['POST','GET'])
 def view_patient():
     form = query_patient_form()
+    patient = db.session.query(model.Patient).all()
     if form.validate_on_submit():
         pid = form.pid.data
         patient_data = model.Patient.query.get(pid)
         patient_diag = model.Medical_Data.query.get(pid)
         return render_template('view_patient_data.html', data=patient_data, data2=patient_diag)
-    return render_template('view_patient.html', form=form)
+    return render_template('view_patient.html', form=form, patient=patient)
 
 @patient.route('/patient/view_patient_data/<data>/<data2>', methods=['POST','GET'])
 def view_patient_data(data, data2):

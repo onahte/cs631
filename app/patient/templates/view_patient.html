@@ -7,6 +7,27 @@
              <body>
                 {{ render_form(form) }}
              </body>
+             <br>
+             <br>
+             <body>
+             <table class="table table-striped table-hover">
+                 <thead>
+                 <tr>
+                     <th>Patient Name</th>
+                     <th>Patient ID</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                    {% for p in patient %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.pid }}</td>
+                    </tr>
+                    {% endfor %}
+                 </tbody>
+             </table>
+
+             </body>
          </div>
     </div>
 {% endblock %}

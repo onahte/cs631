@@ -1,6 +1,6 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError, NumberRange
 from wtforms.fields import SelectField, IntegerField, StringField, SubmitField, DateField, TimeField
 from sqlalchemy.orm import sessionmaker
 from ..db import db, model, engine
@@ -41,7 +41,7 @@ class add_patient_form(FlaskForm):
 class schedule_appt_patient_form(FlaskForm):
     pid = IntegerField('Patient ID', validators=[DataRequired()])
     eid = IntegerField('Physician ID', validators=[DataRequired()])
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
     time = TimeField('Time', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -72,12 +72,8 @@ class add_staff_form(FlaskForm):
     city =  StringField('City', validators=[DataRequired()])
     state = SelectField('State', choices=state_dropdown, validators=[DataRequired()])
     gender = SelectField('Gender', choices=['M', 'F'], validators=[DataRequired()])
-    salary = IntegerField('Salary', validators=[DataRequired()])
+    salary = IntegerField('Salary', validators=[DataRequired(), NumberRange(25000, 300000)])
     submit = SubmitField("Submit")
-
-    def validate_salary(self, salary):
-        if salary < 25000 or salary > 300000:
-           raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
 
 class add_nurse_form(FlaskForm):
     grade_option = ['CNA', 'LPN', 'RN', 'APRN']
@@ -87,12 +83,9 @@ class add_nurse_form(FlaskForm):
     grade = SelectField(choices=grade_option, validators=[DataRequired()])
     unit = SelectField(choices=unit_option, validators=[DataRequired()])
     gender = SelectField('Gender', choices=['M', 'F'], validators=[DataRequired()])
-    salary = IntegerField('Salary', validators=[DataRequired()])
+    salary = IntegerField('Salary', validators=[DataRequired(), NumberRange(25000, 300000)])
     submit = SubmitField("Submit")
 
-    def validate_salary(self, salary):
-        if salary < 25000 or salary > 300000:
-           raise ValidationError(f"Salary must be greater than 25,000 and less than 300,000.")
 
 class remove_staff_form(FlaskForm):
     eid = IntegerField('EID', validators=[DataRequired()])
