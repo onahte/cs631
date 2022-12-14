@@ -86,8 +86,7 @@ def schedule_appt():
                                                             date=form.date.data,
                                                             time=form.time.data).first()
         if physician_avail != None:
-            flash(f"{physician_avail}")
-            #flash(f'Specified time is not available. Please try another time.')
+            flash(f'Specified time is not available. Please try another time.')
             return redirect(url_for('patient.schedule_appt', form=form))
         new_appt_id = db.session.query(func.max(model.Consultation.consultation_id)).first()[0] + 1
         new_appt = model.Consultation(consultation_id=new_appt_id,

@@ -1,4 +1,4 @@
-bed_id,wing,room,bed
+pid,wing,room,bed
 1,Green,120,A
 2,Green,120,B
 3,Green,121,A

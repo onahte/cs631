@@ -7,28 +7,72 @@
              <h3>Inpatient Bed Assignment</h3>
              <body>
                 <p>Available Beds</p>
-                {% for i in {{ beds }} %}
-                    <p>Wing: i[0] | Room: i[1] | Bed: i[2]</p>
-                {% endfor %}
+                <table class="table table-striped table-hover">
+                 <thead>
+                    <tr>
+                        <th>Wing</th>
+                        <th>Room</th>
+                        <th>Bed</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for i in beds %}
+                        <tr>
+                            <td>{{ i[0] }}</td>
+                            <td>{{ i[1] }}</td>
+                            <td>{{ i[2] }}</td>
+                        </tr>
+                    {% endfor %}
+                 </tbody>
+                 </table>
              </body>
              <body>
                 <p>Nurses</p>
-                {% for j in {{ nurses[0] }} %}
-                    <p>Wing: j.wing }} | Nurse: j.eid</p>
-                {% endfor %}
-                <br>
-                {% for k in {{ nurses[1] }} %}
-                    <p>Wing: k.wing | Nurse: k.eid</p>
-                {% endfor %}
+                <table class="table table-striped table-hover">
+                 <thead>
+                    <tr>
+                        <th>Wing</th>
+                        <th>Nurse ID</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for j in nurses[0] %}
+                        <tr>
+                            <td>{{ j.wing}}</td>
+                            <td>{{ j.eid}}</td>
+                        </tr>
+                    {% endfor %}
+                 </tbody>
+                 <tbody>
+                    {% for k in nurses[1] %}
+                        <tr>
+                            <td>{{ k.wing}}</td>
+                            <td>{{ k.eid}}</td>
+                        </tr>
+                    {% endfor %}
+
+                 </tbody>
+                 </table>
                 <br>
              </body>
              <body>
                 <p>Physicians</p>
-                {% for physician in {{ physcians }} %}
-                    {% for key, value in physician.items() %}
-                        <p>Physician: key | Patient Count: value</p>
-                    {% endfor %}
+                <table class="table table-striped table-hover">
+                 <thead>
+                    <tr>
+                        <th>Physician ID</th>
+                        <th>Patients In Care</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for physician in physicians %}
+                    <tr>
+                        <td>{{ physician[0] }}</td>
+                        <td>{{ physician[1] }}</td>
+                    </tr>
                 {% endfor %}
+                 </tbody>
+                </table>
                 <br>
              </body>
              <body>

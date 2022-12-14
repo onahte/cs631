@@ -57,7 +57,7 @@ class Physician(db.Model):
 
 class Bed(db.Model):
     __tablename__ = 'bed'
-    bed_id = db.Column(db.Integer, primary_key=True)
+    pid = db.Column(db.Integer, primary_key=True)
     wing = db.Column(db.String, nullable=False)
     room = db.Column(db.Integer, nullable=False)
     bed = db.Column(db.String, nullable=False)

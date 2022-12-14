@@ -141,19 +141,19 @@ class schedule_shift_form(FlaskForm):
             raise ValidationError("Shift end time must be after start time.")
 
 class inpatient_option_form(FlaskForm):
-    inpatient_options = ['Check Available/Assign Bed','View/Schedule Surgery']
+    inpatient_options = ['Check-in','View/Schedule Surgery', 'Reassign Nurse/Physician', 'Check-out']
     inpatient = SelectField('InPatient Options', choices=inpatient_options, validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class inpatient_checkin_form(FlaskForm):
     pid = IntegerField('Patient ID', validators=[DataRequired()])
-    wing = RadioField('Wing', choices=['Blue', 'Green'], validators=[DataRequired()])
+    wing = SelectField('Wing', choices=['Blue', 'Green'], validators=[DataRequired()])
     room = StringField('Room', validators=[DataRequired()])
-    bed = RadioField('Bed', choices=['A', 'B'], validators=[DataRequired()])
-    check_in_date = DateField('Check In Date', format='%m/%d/%Y')
+    bed = SelectField('Bed', choices=['A', 'B'], validators=[DataRequired()])
+    check_in_date = DateField('Check In Date', format='%Y-%m-%d')
     check_in_time = TimeField('Check In Time', format='%H:%M')
-    eid = IntegerField('Physician', validators=[DataRequired()])
     nurse_eid = IntegerField('Nurse')
+    eid = IntegerField('Physician', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class assign_staff_form(FlaskForm):

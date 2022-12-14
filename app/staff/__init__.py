@@ -44,25 +44,13 @@ def _staff():
 def view_staff(role):
     staff = None
     if role == 'Physician':
-        with engine.connect() as connection:
-            staff = session.query(model.Physician)
-            session.close()
-            engine.dispose()
+        staff = db.session.query(model.Physician)
     elif role == 'Nurse':
-        with engine.connect() as connection:
-            staff = session.query(model.Nurse)
-            session.close()
-            engine.dispose()
+        staff = db.session.query(model.Nurse)
     elif role == 'Surgeon':
-        with engine.connect() as connection:
-            staff = session.query(model.Surgeon)
-            session.close()
-            engine.dispose()
+        staff = db.session.query(model.Surgeon)
     elif role == 'Support Staff':
-        with engine.connect() as connection:
-            staff = session.query(model.Nurse)
-            session.close()
-            engine.dispose()
+        staff = db.session.query(model.Nurse)
     return render_template('view_staff.html', role=role, data=staff)
 
 

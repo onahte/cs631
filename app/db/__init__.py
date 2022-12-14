@@ -19,14 +19,16 @@ engine = create_engine(URL)
 
 def init_db():
 
-
+    '''
     '''
     with engine.connect() as connection:
         db.drop_all()
         db.create_all()
     '''
+    '''
     '''This is a list of all our tables. 
         Order the list by putting tables w/ no Foreign Keys first '''
+    '''
     '''
     tables = ['address', 'allergy', 'physician', 'bed', 'nurse',
             'patient', 'clinic', 'consultation', 'contract', 'corporate',
@@ -38,14 +40,17 @@ def init_db():
     for table in tables:
        populate_table(table)
     '''
-    ''' 
+    '''
+    '''
     Foreign Key error occurs when implementing:
     for filename in os.listdir(current_app.config['CSV_DIR']):
         basename, extension = os.path.splitext(filename)
     '''
     '''
+    '''
     connection.close()
     engine.dispose()
+    '''
     '''
     '''
     try:
@@ -59,9 +64,11 @@ def init_db():
         create_database(URL)
     '''
 '''
+'''
 def populate_table(table):
     filename = table + '.csv'
     filepath = os.path.join(current_app.config['CSV_DIR'], filename)
     data = pd.read_csv(filepath)
     data.to_sql(table, engine, if_exists='append', index=False)
+'''
 '''
