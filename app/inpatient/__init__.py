@@ -170,17 +170,15 @@ def reassign():
 @inpatient.route('/checkout', methods=['POST', 'GET'])
 def checkout():
     form = query_patient_form()
+    patients_checkedin = db.session.query(model.Inpatient).all()
     if form.validate_on_submit():
-        patient = db.session.query(model.Inpatient).filter_by(pid=form.pid.data)
-        nurse = db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data)
-        bed = db.session.query(model.Bed).filter_by(pid=form.pid.data)
-        db.session.delete(patient)
-        db.session.delete(nurse)
-        db.session.delete(bed)
+        patient = db.session.query(model.Inpatient).filter_by(pid=form.pid.data).delete()
+        nurse = db.session.query(model.Nurse_Assign_Inpatient).filter_by(pid=form.pid.data).delete()
+        bed = db.session.query(model.Bed).filter_by(pid=form.pid.data).delete()
         db.session.commit()
         flash(f'Patient {form.pid.data} successfully checked out.')
         return redirect(url_for('inpatient._inpatient'))
-    return render_template('checkout.html', form=form)
+    return render_template('checkout.html', form=form, patients_checkedin=patients_checkedin)
 
 
 '''
