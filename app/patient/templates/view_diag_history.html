@@ -19,11 +19,11 @@
                 <p>Blood Type: {{ data2.blood_type }}</p>
                 <p>Heart Disease Risk: {{ data2.heart_disease_risk }}</p>
                 <br>
-                {% for i in data3 %}
-                    <p>Consultation {{ i.consultation_id }}</p>
-                    <p>{{ i.date }} {{ i.time }}</p>
-                    <p>Physician: {{ i.eid }}</p>
-                {% endfor %}
+
+                    <p>Consultation {{ data3.consultation_id }}</p>
+                    <p>{{ data3.date }} {{ data3.time }}</p>
+                    <p>Physician: {{ data3.eid }}</p>
+
              </body>
          </div>
     </div>

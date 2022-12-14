@@ -4,7 +4,7 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap5
 
-from .db import database, db, migrate, init_db
+from .db import database, db, init_db #,migrate
 from .clinic import clinic
 from .patient import patient
 from .physician import physician
@@ -34,8 +34,8 @@ def create_app():
     app.register_blueprint(inpatient)
 
     db.init_app(app)
-    migrate.init_app(app, db)
-    with app.app_context():
-        init_db()
+    #migrate.init_app(app, db)
+    #with app.app_context():
+    #    init_db()
 
     return app

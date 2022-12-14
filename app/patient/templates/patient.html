@@ -7,6 +7,12 @@
              <body>
                 {{ render_form(form)}}
              </body>
+             {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                    {{ messages[0] }}
+                {% endif %}
+            {% endwith %}
          </div>
     </div>
+
 {% endblock %}

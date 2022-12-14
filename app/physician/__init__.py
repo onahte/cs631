@@ -14,21 +14,18 @@ def _physician():
     form = physician_options_form()
     if form.validate_on_submit():
         if form.option.data == 'View Schedule':
-            return redirect(url_for('physician_schedule'))
+            return redirect(url_for('physician.physician_schedule'))
         elif form.option.data == 'Remove':
-            return redirect(url_for('remove_physician'))
+            return redirect(url_for('physician.remove_physician'))
     return render_template('physician.html', form=form)
 
 @physician.route('/physician_schedule', methods=['POST','GET'])
 def physician_schedule():
     form = physician_view_schedule_form()
     if form.validate_on_submit():
-        schedule = None
-        with engine.connect as connection:
-            schedule = session.query(model.Consultation).filter(model.Consultation.eid==form.eid.data,
-                                                                model.Consultation.date==form.date.data)
-        connection.close()
-        engine.dispose()
+        schedule = session.query(model.Consultation).filter(model.Consultation.eid==form.eid.data,
+                                                            model.Consultation.date==form.date.data)
+
         return redirect(url_for('view_schedule'), data=schedule)
     return render_template('physician_schedule.html', form=form)
 

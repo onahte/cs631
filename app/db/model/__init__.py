@@ -201,8 +201,7 @@ class Inpatient(db.Model):
 
 class Medical_Data(db.Model):
     __tablename__ = 'medical_data'
-    medical_code = db.Column(db.Integer, primary_key=True)
-    pid = db.Column(db.Integer, nullable=False)
+    pid = db.Column(db.Integer, primary_key=True)
     total_cholesterol = db.Column(db.Integer, nullable=False)
     HDL = db.Column(db.Integer, nullable=False)
     triglyceride = db.Column(db.Integer, nullable=False)
@@ -211,9 +210,8 @@ class Medical_Data(db.Model):
     blood_type = db.Column(db.String, nullable=False)
     heart_disease_risk = db.Column(db.String, nullable=False)
 
-    def __init__(self, medical_code, pid, total_cholesterol, HDL, triglyceride, LDL, sugar_level, blood_type,
+    def __init__(self, pid, total_cholesterol, HDL, triglyceride, LDL, sugar_level, blood_type,
                  heart_disease_risk):
-        self.medical_code = medical_code
         self.pid = pid
         self.total_cholesterol = total_cholesterol
         self.HDL = HDL

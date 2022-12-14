@@ -1,18 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
-
     <div class="row">
          <div class="col-5 mx-auto mt-5 mb-5">
-             <h3>Staff Query</h3>
+             <h3>Patient Data Query</h3>
              <body>
                 {{ render_form(form)}}
              </body>
-             {% with messages = get_flashed_messages() %}
-                 {% if messages %}
-                    {{ messages[0] }}
-                {% endif %}
-            {% endwith %}
          </div>
     </div>
+
 {% endblock %}

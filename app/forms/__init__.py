@@ -28,10 +28,14 @@ class query_patient_form(FlaskForm):
 class add_patient_form(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     ssn = IntegerField('SSN', validators=[DataRequired()])
+    gender = SelectField('Gender', choices=['M', 'F'], validators=[DataRequired()])
+    dob = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
     city =  StringField('City', validators=[DataRequired()])
     state = SelectField('State', choices=state_dropdown, validators=[DataRequired()])
+    zip = IntegerField('Zip', validators=[DataRequired()])
     phone = IntegerField('Phone Number', validators=[DataRequired()])
+    eid = IntegerField('Physician EID', validators=[DataRequired()])
     submit = SubmitField('Submit')
 '''
     def validate_ssn(self, ssn):
@@ -46,8 +50,9 @@ class add_patient_form(FlaskForm):
 '''
 class schedule_appt_patient_form(FlaskForm):
     pid = IntegerField('Patient ID', validators=[DataRequired()])
-    date = DateField('Date', format='%d/%m/%Y', validators=[DataRequired()])
-    time = TimeField('Time', validators=[DataRequired()], format='%hr:%min')
+    eid = IntegerField('Physician ID', validators=[DataRequired()])
+    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    time = TimeField('Time', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 class physician_options_form(FlaskForm):
@@ -57,11 +62,11 @@ class physician_options_form(FlaskForm):
 
 class physician_view_schedule_form(FlaskForm):
     eid = IntegerField('Physician EID', validators=[DataRequired()])
-    date = DateField('Date', format='%d/%m/%Y', validators=[DataRequired()])
+    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class staff_options_form(FlaskForm):
-    option_selection = ['Add', 'Remove', 'Schedule', 'View']
+    option_selection = ['Add', 'Remove', 'Schedule', 'View Staff by Type']
     options = SelectField(choices=option_selection, validators=[DataRequired()])
     role = SelectField(choices=role_selection, validators=[DataRequired()])
     submit = SubmitField("Submit")
@@ -122,7 +127,7 @@ class remove_staff_form(FlaskForm):
 class schedule_shift_form(FlaskForm):
     role = SelectField(choices=role_selection, validators=[DataRequired()])
     eid = IntegerField('EID', validators=[DataRequired()])
-    date = DateField('Date', format='%d/%m/%Y', validators=[DataRequired()])
+    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
     start_time = TimeField('Start Time', formate='%H:%M', validators=[DataRequired()])
     end_time = TimeField('End Time', formate='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -145,7 +150,7 @@ class inpatient_checkin_form(FlaskForm):
     wing = RadioField('Wing', choices=['Blue', 'Green'], validators=[DataRequired()])
     room = StringField('Room', validators=[DataRequired()])
     bed = RadioField('Bed', choices=['A', 'B'], validators=[DataRequired()])
-    check_in_date = DateField('Check In Date', format='%d/%m/%Y')
+    check_in_date = DateField('Check In Date', format='%m/%d/%Y')
     check_in_time = TimeField('Check In Time', format='%H:%M')
     eid = IntegerField('Physician', validators=[DataRequired()])
     nurse_eid = IntegerField('Nurse')
@@ -169,7 +174,7 @@ class schedule_surgery_form(FlaskForm):
     eid = IntegerField('Surgeon ID', validators=[DataRequired()])
     surgery_code = IntegerField('Surgery Code', validators=[DataRequired()])
     theatre = IntegerField('Theatre', validators=[DataRequired()])
-    date = DateField('Date', format='%d/%m/%Y', validators=[DataRequired()])
+    date = DateField('Date', format='%m/%d/%Y', validators=[DataRequired()])
     time = TimeField('Time', format='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Submit')
 

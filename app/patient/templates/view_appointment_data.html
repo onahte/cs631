@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+    <div class="row">
+         <div class="col-5 mx-auto mt-5 mb-5">
+             <h3>View Patient Data</h3>
+             <body>
+             <p>Patient: {{ pid }} </p>
+             {% for d in data %}
+                <p>Physician: {{ d.eid }}</p>
+                <p>Date: {{ d.date}}</p>
+                <p>Time: {{ d.time }}</p>
+                <br>
+             {% endfor %}
+             </body>
+         </div>
+    </div>
+{% endblock %}

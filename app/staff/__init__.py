@@ -33,10 +33,10 @@ def _staff():
         elif option == 'Schedule':
             if role == 'Surgeon':
                 flash('Surgeons are scheduled by surgery scheduler and not by shift scheduler. Please try again.')
-                return redirect(url_for('staff'))
-            return redirect(url_for(schedule_staff, role=role))
+                return redirect(url_for('staff._staff'))
+            return redirect(url_for('staff.schedule_staff', role=role))
         elif option == 'View Staff by Type':
-            return redirect(url_for('view_staff', role=role))
+            return redirect(url_for('staff.view_staff', role=role))
     return render_template('staff.html', form=form)
 
 

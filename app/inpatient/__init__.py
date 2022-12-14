@@ -113,25 +113,18 @@ def view_options():
         if form.view_surgery_by.data == 'Theatre' or form.view_surgery_by.data == 'Surgeon':
             surgery = None
             view_by = form.view_surgery_by.data.lower()
-            with engine.connect() as connection:
-                surgery = session.query(model.SurgerySchedule).filter(model.SurgerySchedule.date==form.date.data,
+            surgery = session.query(model.SurgerySchedule).filter(model.SurgerySchedule.date==form.date.data,
                                                                       model.SurgerySchedule.view_by==form.options.data)
-                connection.close()
-            engine.dispose()
             if surgery == None:
                 flash('There is no surgery by the provided criteria.')
-                return redirect(url_for('view_surgery'))
-            return redirect(url_for('surgery'), data=surgery, view_by=view_by)
+                return redirect(url_for('inpatient.view_surgery'))
+            return redirect(url_for('inpatient.surgery'), data=surgery, view_by=view_by)
         elif form.view_surgery_by.data == 'Patient':
-            surgery = None
-            with engine.connect() as connection:
-                surgery = session.query(model.SurgerySchedule).filter(model.SurgerySchedule.pid==form.pid.data)
-                connection.close()
-            engine.dispose()
+            surgery = session.query(model.SurgerySchedule).filter(model.SurgerySchedule.pid==form.pid.data)
             if surgery == None:
                 flash('There is no surgery by the provided criteria.')
-                return redirect(url_for('view_options'))
-            return redirect(url_for('view_surgery'), surgery=surgery, view_by=view_by)
+                return redirect(url_for('inpatient.view_options'))
+            return redirect(url_for('inpatient.view_surgery'), surgery=surgery, view_by=view_by)
     return render_template('view_options.html', form=form)
 
 @inpatient.route('/schedule_surgery', methods=['POST', 'GET'])
