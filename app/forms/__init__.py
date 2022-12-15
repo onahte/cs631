@@ -118,7 +118,7 @@ class inpatient_checkin_form(FlaskForm):
     wing = SelectField('Wing', choices=['Blue', 'Green'], validators=[DataRequired()])
     room = StringField('Room', validators=[DataRequired()])
     bed = SelectField('Bed', choices=['A', 'B'], validators=[DataRequired()])
-    check_in_date = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
+    check_in_date = DateField('Check In Date', format='%Y-%m-%d', validators=[DataRequired()])
     check_in_time = TimeField('Check In Time')
     nurse_eid = IntegerField('Nurse')
     eid = IntegerField('Physician', validators=[DataRequired()])

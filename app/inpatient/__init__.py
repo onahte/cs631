@@ -137,6 +137,7 @@ def view_by_patient():
 @inpatient.route('/schedule_surgery', methods=['POST', 'GET'])
 def schedule_surgery():
     form = schedule_surgery_form()
+    surgery_schedule = db.session.query(model.SurgerySchedule).all()
     surgery_code = db.session.query(model.Surgery).all()
     if form.validate_on_submit():
         last_scheduled = db.session.query(func.max(model.SurgerySchedule.schedule_id)).first()[0] + 1
@@ -150,7 +151,7 @@ def schedule_surgery():
         db.session.add(new_surgery)
         flash(f'Surgery {new_surgery.schedule_id} successfully scheduled.')
         return redirect(url_for('inpatient._inpatient'))
-    return render_template('schedule_surgery.html', form=form, surgery_code=surgery_code)
+    return render_template('schedule_surgery.html', form=form, surgery_code=surgery_code, surgery_schedule=surgery_schedule)
 
 @inpatient.route('/reassign', methods=['POST', 'GET'])
 def reassign():

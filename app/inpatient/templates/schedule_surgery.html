@@ -15,6 +15,34 @@
                  <thead>
                  <tr>
                      <th>Surgery Code</th>
+                     <th>Surgeon</th>
+                     <th>Patient</th>
+                     <th>Date</th>
+                     <th>Time</th>
+                     <th>Theatre</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 {% for sc in surgery_schedule %}
+                 <tr>
+                     <td>{{ sc.surgery_code }}</td>
+                     <td>{{ sc.eid }}</td>
+                     <td>{{ sc.pid }}</td>
+                     <td>{{ sc.date }}</td>
+                     <td>{{ sc.time }}</td>
+                     <td>{{ sc.theatre }}</td>
+                 </tr>
+                 {% endfor %}
+                 </tbody>
+             </table>
+             </body>
+             <br>
+             <body>
+             <p>Surgery Codes</p>
+             <table class="table table-striped table-hover">
+                 <thead>
+                 <tr>
+                     <th>Surgery Code</th>
                      <th>Surgery Type</th>
                      <th>Skill Code</th>
                      <th>Special Needs</th>

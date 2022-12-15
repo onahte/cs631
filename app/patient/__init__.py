@@ -67,6 +67,7 @@ def add_patient():
 @patient.route('/diag_history', methods=['POST','GET'])
 def diag_history():
     form = query_patient_form()
+    patient_record = db.session.query(model.Patient).all()
     if form.validate_on_submit():
         patient_data = model.Patient.query.get(form.pid.data)
         patient_diag = model.Medical_Data.query.get(form.pid.data)
@@ -75,7 +76,7 @@ def diag_history():
                                data=patient_data,
                                data2=patient_diag,
                                data3=patient_consult)
-    return render_template('diag_history.html', form=form)
+    return render_template('diag_history.html', form=form, patient_record=patient_record)
 
 @patient.route('/schedule_appt', methods=['POST','GET'])
 def schedule_appt():
